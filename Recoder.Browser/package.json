@@ -4,7 +4,7 @@
   "description": "Recoder.Browser",
   "main": "app.js",
   "scripts": {
-    "start": "node main.js",
+    "start": "node app.js",
     "build-win": "node_modules/.bin/pkg . -t node18-win-x64 --out-path=dist/",
     "build-linux": "node_modules/.bin/pkg . -t node18-linux-x64 --out-path=dist/",
     "build-macos": "node_modules/.bin/pkg . -t node18-macos-x64 --out-path=dist/"

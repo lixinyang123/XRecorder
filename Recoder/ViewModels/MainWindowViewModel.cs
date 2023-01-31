@@ -121,6 +121,7 @@ namespace Recoder.ViewModels
 
         private void Exit()
         {
+            // 退出录屏，上传视频
             Process.GetCurrentProcess().Kill();
         }
     }
