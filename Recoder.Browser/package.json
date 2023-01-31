@@ -1,14 +1,19 @@
 {
-  "name": "recoder.browser",
+  "name": "browser",
   "version": "0.0.0",
   "description": "Recoder.Browser",
   "main": "app.js",
-  "author": {
-    "name": ""
+  "scripts": {
+    "start": "node main.js",
+    "build-win": "node_modules/.bin/pkg . -t node18-win-x64 --out-path=dist/",
+    "build-linux": "node_modules/.bin/pkg . -t node18-linux-x64 --out-path=dist/",
+    "build-macos": "node_modules/.bin/pkg . -t node18-macos-x64 --out-path=dist/"
   },
+  "bin": "app.js",
   "devDependencies": {
-    "eslint": "^8.21.0"
+    "pkg": "^5.8.0"
   },
-  "eslintConfig": {
+  "dependencies": {
+    "puppeteer": "^19.6.2"
   }
 }
