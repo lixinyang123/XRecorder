@@ -1,3 +1,4 @@
+using Avalonia.Controls;
 using ReactiveUI;
 using System;
 using System.IO;
@@ -11,13 +12,11 @@ namespace Recoder.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
-        public string Greeting { get; set; } = "ÍøÒ³È¡Ö¤";
+        public string RecordText { get; set; } = "Start";
 
         public ICommand DownloadFFmpegCommand { get; set; }
 
-        public ICommand StartCaptureCommand { get; set; }
-
-        public ICommand StopCaptureCommand { get; set; }
+        public ICommand SwitchCaptureCommand { get; set; }
 
         public double DownloadFFmpegProgress { get; set; }
 
@@ -26,8 +25,7 @@ namespace Recoder.ViewModels
         public MainWindowViewModel()
         {
             DownloadFFmpegCommand = ReactiveCommand.Create(DownloadFFmpeg);
-            StartCaptureCommand = ReactiveCommand.Create(StartCapture);
-            StopCaptureCommand = ReactiveCommand.Create(StopCapture);
+            SwitchCaptureCommand = ReactiveCommand.Create(SwitchCapture);
         }
 
         private async Task DownloadFFmpeg()
@@ -43,8 +41,18 @@ namespace Recoder.ViewModels
             await FFmpegDownloader.GetLatestVersion(FFmpegVersion.Official, progress);
         }
 
-        private void StartCapture()
+        private void SwitchCapture()
         {
+            if(RecordText == "Stop")
+            {
+                cancellationTokenSource?.Cancel();
+                cancellationTokenSource?.Dispose();
+
+                RecordText = "Start";
+                this.RaisePropertyChanged(nameof(RecordText));
+                return;
+            }
+
             string output = Path.Combine("./desktop_capture.mp4");
             File.Delete(output);
 
@@ -58,25 +66,13 @@ namespace Recoder.ViewModels
                     .SetOutput(output)
                     .Start(cancellationTokenSource.Token);
 
-                Greeting = "Start Capture";
+                RecordText = "Stop";
+                this.RaisePropertyChanged(nameof(RecordText));
             }
             catch (Exception ex)
             {
-                Greeting = ex.Message;
+                _ = new Window() { Content = new TextBlock() { Text = ex.Message } };
             }
-            finally
-            {
-                this.RaisePropertyChanged(nameof(Greeting));
-            }
-        }
-
-        private void StopCapture()
-        {
-            cancellationTokenSource?.Cancel();
-            cancellationTokenSource?.Dispose();
-
-            Greeting = "Stop Capture";
-            this.RaisePropertyChanged(nameof(Greeting));
         }
     }
 }
