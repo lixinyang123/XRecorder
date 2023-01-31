@@ -1,6 +1,6 @@
-using Avalonia.Controls;
 using ReactiveUI;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,20 +12,37 @@ namespace Recoder.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
-        public string RecordText { get; set; } = "Start";
+        /// <summary>
+        /// Private field
+        /// </summary>
+
+        private CancellationTokenSource? cancellationTokenSource;
+
+        private bool isRecording = false;
+
+        /// <summary>
+        /// Binding Properties
+        /// </summary>
+
+        public string RecordText => isRecording ? "Stop" : "Start";
+
+        public double DownloadFFmpegProgress { get; set; }
+
+        /// <summary>
+        /// Binding Commands
+        /// </summary>
 
         public ICommand DownloadFFmpegCommand { get; set; }
 
         public ICommand SwitchCaptureCommand { get; set; }
 
-        public double DownloadFFmpegProgress { get; set; }
-
-        private CancellationTokenSource? cancellationTokenSource;
+        public ICommand ExitCommand { get; set; }
 
         public MainWindowViewModel()
         {
             DownloadFFmpegCommand = ReactiveCommand.Create(DownloadFFmpeg);
             SwitchCaptureCommand = ReactiveCommand.Create(SwitchCapture);
+            ExitCommand = ReactiveCommand.Create(Exit);
         }
 
         private async Task DownloadFFmpeg()
@@ -43,16 +60,20 @@ namespace Recoder.ViewModels
 
         private void SwitchCapture()
         {
-            if(RecordText == "Stop")
+            if (isRecording)
             {
-                cancellationTokenSource?.Cancel();
-                cancellationTokenSource?.Dispose();
-
-                RecordText = "Start";
-                this.RaisePropertyChanged(nameof(RecordText));
-                return;
+                StopRecord();
+            }
+            else
+            {
+                StartRecord();
             }
 
+            this.RaisePropertyChanged(nameof(RecordText));
+        }
+
+        private void StartRecord()
+        {
             string output = Path.Combine("./desktop_capture.mp4");
             File.Delete(output);
 
@@ -66,13 +87,25 @@ namespace Recoder.ViewModels
                     .SetOutput(output)
                     .Start(cancellationTokenSource.Token);
 
-                RecordText = "Stop";
-                this.RaisePropertyChanged(nameof(RecordText));
+                isRecording = true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                _ = new Window() { Content = new TextBlock() { Text = ex.Message } };
+                isRecording = false;
             }
+        }
+
+        private void StopRecord()
+        {
+            cancellationTokenSource?.Cancel();
+            cancellationTokenSource?.Dispose();
+
+            isRecording = false;
+        }
+
+        private void Exit()
+        {
+            Process.GetCurrentProcess().Kill();
         }
     }
 }

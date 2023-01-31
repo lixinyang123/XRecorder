@@ -13,13 +13,12 @@
 		Height="70"
 		Width="550"
 		CanResize="False"
-		Position="0,0"
-		Topmost="True">
+		Topmost="True"
+		Opacity="0.7">
 
     <Design.DataContext>
         <vm:MainWindowViewModel/>
     </Design.DataContext>
-
 
 	<StackPanel Orientation="Horizontal">
 		<Button Content="Download FFmpeg" Command="{Binding DownloadFFmpegCommand}" Margin="20" />
