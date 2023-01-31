@@ -6,7 +6,8 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Recoder.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
-        Title="Recoder">
+        Title="Recoder"
+		ExtendClientAreaToDecorationsHint="True">
 
     <Design.DataContext>
         <vm:MainWindowViewModel/>
