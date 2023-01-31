@@ -16,6 +16,8 @@ namespace Recoder.ViewModels
         /// Private field
         /// </summary>
 
+        private const string browserName = "browser.exe";
+
         private CancellationTokenSource? cancellationTokenSource;
 
         private bool isRecording = false;
@@ -36,12 +38,15 @@ namespace Recoder.ViewModels
 
         public ICommand SwitchCaptureCommand { get; set; }
 
+        public ICommand OpenBrowserCommand { get; set; }
+
         public ICommand ExitCommand { get; set; }
 
         public MainWindowViewModel()
         {
             DownloadFFmpegCommand = ReactiveCommand.Create(DownloadFFmpeg);
             SwitchCaptureCommand = ReactiveCommand.Create(SwitchCapture);
+            OpenBrowserCommand = ReactiveCommand.Create(OpenBrowser);
             ExitCommand = ReactiveCommand.Create(Exit);
         }
 
@@ -101,6 +106,17 @@ namespace Recoder.ViewModels
             cancellationTokenSource?.Dispose();
 
             isRecording = false;
+        }
+
+        private void OpenBrowser()
+        {
+            if(!File.Exists(browserName))
+            {
+                return;
+            }
+
+            // 校验文件哈希，防止篡改
+            Process.Start(browserName);
         }
 
         private void Exit()

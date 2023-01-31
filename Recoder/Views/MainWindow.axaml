@@ -3,15 +3,15 @@
         xmlns:vm="using:Recoder.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="550" d:DesignHeight="70"
+        mc:Ignorable="d" d:DesignWidth="560" d:DesignHeight="50"
         x:Class="Recoder.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
         Title="Recoder"
 		ExtendClientAreaToDecorationsHint="True"
 		ExtendClientAreaChromeHints="NoChrome"
 		ExtendClientAreaTitleBarHeightHint="0"
-		Height="70"
-		Width="550"
+		Height="50"
+		Width="560"
 		CanResize="False"
 		Topmost="True"
 		Opacity="0.7">
@@ -21,9 +21,10 @@
     </Design.DataContext>
 
 	<StackPanel Orientation="Horizontal">
-		<Button Content="Download FFmpeg" Command="{Binding DownloadFFmpegCommand}" Margin="20" />
+		<Button Content="Download FFmpeg" Command="{Binding DownloadFFmpegCommand}" Margin="10" />
 		<ProgressBar Value="{Binding DownloadFFmpegProgress}" />
 
+		<Button Content="Browser" Command="{Binding OpenBrowserCommand}" />
 		<Button Content="{Binding RecordText}" Command="{Binding SwitchCaptureCommand}" Margin="10" />
 		<Button Content="Exit" Command="{Binding SwitchCaptureCommand}" />
 	</StackPanel>
