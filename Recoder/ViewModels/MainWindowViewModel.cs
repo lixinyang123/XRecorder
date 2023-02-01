@@ -23,6 +23,8 @@ namespace Recoder.ViewModels
 
         private bool isRecording = false;
 
+        private readonly IClassicDesktopStyleApplicationLifetime applicationLifetime;
+
         /// <summary>
         /// Binding Properties
         /// </summary>
@@ -45,6 +47,9 @@ namespace Recoder.ViewModels
 
         public MainWindowViewModel()
         {
+            applicationLifetime = Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime
+                ?? throw new NullReferenceException();
+
             DownloadFFmpegCommand = ReactiveCommand.Create(DownloadFFmpeg);
             SwitchCaptureCommand = ReactiveCommand.Create(SwitchCapture);
             OpenBrowserCommand = ReactiveCommand.Create(OpenBrowser);
@@ -86,7 +91,7 @@ namespace Recoder.ViewModels
             try
             {
                 string command = FFmpeg.Conversions.New()
-                    .AddDesktopStream()
+                    .AddDesktopStream(null, 30)
                     .SetOutput(output)
                     .Build();
 
@@ -126,12 +131,12 @@ namespace Recoder.ViewModels
 
         private void Exit()
         {
-            if(isRecording)
+            if (isRecording)
             {
                 StopRecord();
             }
 
-            (Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.Shutdown();
+            applicationLifetime.Shutdown();
         }
     }
 }

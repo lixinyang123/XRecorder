@@ -7,5 +7,5 @@ const puppeteer = require('puppeteer');
     });
 
     var page = await browser.newPage();
-    await page.goto('chrome://new-tab-page/');
+    await page.goto('https://www.baidu.com');
 })();
