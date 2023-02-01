@@ -21,12 +21,16 @@
     </Design.DataContext>
 
 	<StackPanel Orientation="Horizontal">
-		<Button Content="Download FFmpeg" Command="{Binding DownloadFFmpegCommand}" Margin="10" />
-		<ProgressBar Value="{Binding DownloadFFmpegProgress}" />
+		<Button Command="{Binding DownloadFFmpegCommand}" Margin="10">
+			<StackPanel>
+				<TextBlock Text="Download FFmpeg" HorizontalAlignment="Center" />
+				<ProgressBar Value="{Binding DownloadFFmpegProgress}" Width="70" />
+			</StackPanel>
+		</Button>
 
 		<Button Content="Browser" Command="{Binding OpenBrowserCommand}" />
 		<Button Content="{Binding RecordText}" Command="{Binding SwitchCaptureCommand}" Margin="10" />
-		<Button Content="Exit" Command="{Binding SwitchCaptureCommand}" />
+		<Button Content="Exit" Command="{Binding ExitCommand}" />
 	</StackPanel>
 	
 </Window>

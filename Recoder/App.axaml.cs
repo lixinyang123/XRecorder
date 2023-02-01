@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using Avalonia.Platform;
 using Recoder.ViewModels;
 using Recoder.Views;
 using System;
@@ -23,7 +24,8 @@ namespace Recoder
                     DataContext = new MainWindowViewModel()
                 };
 
-                int positionX = Convert.ToInt32(window.Screens.Primary.Bounds.Width / 2 - window.Width / 2);
+                Screen primaryScreen = window.Screens.Primary ?? throw new PlatformNotSupportedException();
+                int positionX = Convert.ToInt32(primaryScreen.Bounds.Width / 2 - window.Width / 2);
                 window.Position = new PixelPoint(positionX, 0);
 
                 desktop.MainWindow = window;

@@ -1,8 +1,9 @@
+using Avalonia;
+using Avalonia.Controls.ApplicationLifetimes;
 using ReactiveUI;
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xabe.FFmpeg;
@@ -114,7 +115,7 @@ namespace Recoder.ViewModels
 
         private void OpenBrowser()
         {
-            if(!File.Exists(browserName))
+            if (!File.Exists(browserName))
             {
                 return;
             }
@@ -125,8 +126,12 @@ namespace Recoder.ViewModels
 
         private void Exit()
         {
-            // 退出录屏，上传视频
-            Process.GetCurrentProcess().Kill();
+            if(isRecording)
+            {
+                StopRecord();
+            }
+
+            (Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.Shutdown();
         }
     }
 }
