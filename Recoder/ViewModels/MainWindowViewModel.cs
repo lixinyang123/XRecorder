@@ -88,7 +88,6 @@ namespace Recoder.ViewModels
             {
                 FFmpeg.Conversions.New()
                     .AddDesktopStream()
-                    .SetInputTime(TimeSpan.FromSeconds(10))
                     .SetOutput(output)
                     .Start(cancellationTokenSource.Token);
 
