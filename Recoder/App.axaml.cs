@@ -23,11 +23,6 @@ namespace Recoder
                     DataContext = new MainWindowViewModel()
                 };
 
-                if (window.Screens.Primary is null)
-                {
-                    throw new PlatformNotSupportedException();
-                }
-
                 int positionX = Convert.ToInt32(window.Screens.Primary.Bounds.Width / 2 - window.Width / 2);
                 window.Position = new PixelPoint(positionX, 0);
 
