@@ -18,7 +18,7 @@ namespace Recoder.ViewModels
 
         private const string browserName = "browser.exe";
 
-        private CancellationTokenSource? cancellationTokenSource;
+        private Process? ffProcess;
 
         private bool isRecording = false;
 
@@ -79,17 +79,21 @@ namespace Recoder.ViewModels
 
         private void StartRecord()
         {
-            string output = Path.Combine("./desktop_capture.mp4");
+            string output = Path.Combine("./1Capture.mp4");
             File.Delete(output);
-
-            cancellationTokenSource = new();
 
             try
             {
-                FFmpeg.Conversions.New()
+                string command = FFmpeg.Conversions.New()
                     .AddDesktopStream()
                     .SetOutput(output)
-                    .Start(cancellationTokenSource.Token);
+                    .Build();
+
+                ffProcess = Process.Start(new ProcessStartInfo("ffmpeg.exe", command)
+                {
+                    CreateNoWindow = true,
+                    RedirectStandardInput = true
+                });
 
                 isRecording = true;
             }
@@ -101,8 +105,9 @@ namespace Recoder.ViewModels
 
         private void StopRecord()
         {
-            cancellationTokenSource?.Cancel();
-            cancellationTokenSource?.Dispose();
+            ffProcess?.StandardInput.Write('q');
+            ffProcess?.WaitForExit();
+            ffProcess?.Dispose();
 
             isRecording = false;
         }

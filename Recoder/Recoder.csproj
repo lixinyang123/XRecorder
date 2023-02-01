@@ -27,10 +27,8 @@
     <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.0-preview4" />
     <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.0-preview4" />
     <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.0-preview4" />
+    <PackageReference Include="Xabe.FFmpeg" Version="5.2.4" />
+    <PackageReference Include="Xabe.FFmpeg.Downloader" Version="5.2.4" />
     <PackageReference Include="XamlNameReferenceGenerator" Version="1.5.1" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Recoder.FFmpeg\src\Xabe.FFmpeg.Downloader\Xabe.FFmpeg.Downloader.csproj" />
-    <ProjectReference Include="..\Recoder.FFmpeg\src\Xabe.FFmpeg\Xabe.FFmpeg.csproj" />
   </ItemGroup>
 </Project>
