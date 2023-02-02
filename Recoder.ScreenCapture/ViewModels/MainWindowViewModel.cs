@@ -4,9 +4,7 @@ using ReactiveUI;
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Threading.Tasks;
 using System.Windows.Input;
-using Xabe.FFmpeg;
 
 namespace Recoder.ViewModels
 {
@@ -17,8 +15,6 @@ namespace Recoder.ViewModels
         /// </summary>
 
         private const string BROWSER_PATH = "browser.exe";
-
-        private const string FFMPEG_PATH = "ffmpeg.exe";
 
         private const string VIDEO_PATH = "DesktopCapture";
 
@@ -33,8 +29,6 @@ namespace Recoder.ViewModels
         /// </summary>
 
         public string RecordText => isRecording ? "Stop" : "Start";
-
-        public double DownloadFFmpegProgress { get; set; }
 
         /// <summary>
         /// Binding Commands
@@ -57,9 +51,6 @@ namespace Recoder.ViewModels
 
             if (!Directory.Exists(VIDEO_PATH))
                 Directory.CreateDirectory(VIDEO_PATH);
-
-            if (File.Exists(FFMPEG_PATH))
-                DownloadFFmpegProgress = 100;
         }
 
         private void SwitchCapture()
@@ -80,17 +71,30 @@ namespace Recoder.ViewModels
         {
             try
             {
-                string command = FFmpeg.Conversions.New()
-                    .AddDesktopStream(null, 30)
-                    .SetOutput(Path.Combine(VIDEO_PATH, Guid.NewGuid().ToString() + ".mp4"))
-                    .Build();
+                ProcessStartInfo startInfo = new();
+                string fileName = Path.Combine(VIDEO_PATH, Guid.NewGuid().ToString() + ".mp4");
 
-                ffProcess = Process.Start(new ProcessStartInfo(FFMPEG_PATH, command)
+                if(System.OperatingSystem.IsWindows())
                 {
-                    CreateNoWindow = true,
-                    RedirectStandardInput = true
-                });
+                    startInfo = new("ffmpeg.exe", $"-f gdigrab -i desktop {fileName}");
+                }
+                else if(System.OperatingSystem.IsLinux())
+                {
+                    startInfo = new("ffmpeg", $"-f x11grab -i :0.0+0,0 {fileName}");
+                }
+                else if(System.OperatingSystem.IsMacOS())
+                {
+                    startInfo = new("ffmpeg", $"-f avfoundation -i 0 {fileName}");
+                }
+                else
+                {
+                    throw new PlatformNotSupportedException();
+                }
 
+                startInfo.CreateNoWindow = true;
+                startInfo.RedirectStandardInput = true;
+
+                ffProcess = Process.Start(startInfo);
                 isRecording = true;
             }
             catch (Exception)
@@ -115,7 +119,7 @@ namespace Recoder.ViewModels
                 return;
             }
 
-            // Ð£ÑéÎÄ¼þ¹þÏ££¬·ÀÖ¹´Û¸Ä
+            // Ð£ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½Ï£ï¿½ï¿½ï¿½ï¿½Ö¹ï¿½Û¸ï¿½
             Process.Start(new ProcessStartInfo(BROWSER_PATH)
             {
                 CreateNoWindow = true
