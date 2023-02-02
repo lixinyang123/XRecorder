@@ -140,7 +140,7 @@ namespace Recoder.ViewModels
                 throw new PlatformNotSupportedException();
             }
 
-            Process.Start(new ProcessStartInfo(path)
+            Process.Start(new ProcessStartInfo(path, "baidu.com")
             {
                 CreateNoWindow = true
             });
