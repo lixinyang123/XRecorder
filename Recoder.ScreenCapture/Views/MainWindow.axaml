@@ -3,7 +3,7 @@
         xmlns:vm="using:Recoder.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="560" d:DesignHeight="50"
+        mc:Ignorable="d" d:DesignWidth="350" d:DesignHeight="50"
         x:Class="Recoder.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
         Title="Recoder"
@@ -11,7 +11,7 @@
 		ExtendClientAreaChromeHints="NoChrome"
 		ExtendClientAreaTitleBarHeightHint="0"
 		Height="50"
-		Width="560"
+		Width="350"
 		CanResize="False"
 		Topmost="True"
 		ShowInTaskbar ="False"
@@ -23,24 +23,16 @@
 
 	<Grid>
 		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="245" />
-			<ColumnDefinition Width="120" />
+			<ColumnDefinition Width="140" />
 			<ColumnDefinition Width="*" />
 			<ColumnDefinition Width="55" />
 		</Grid.ColumnDefinitions>
 
-		<Button Command="{Binding DownloadFFmpegCommand}" Margin="10">
-			<StackPanel>
-				<TextBlock Text="Download FFmpeg" HorizontalAlignment="Center" />
-				<ProgressBar Value="{Binding DownloadFFmpegProgress}" Width="70" />
-			</StackPanel>
-		</Button>
+		<Button Content="Open Browser" Command="{Binding OpenBrowserCommand}" Grid.Column="0" Margin="10" />
 
-		<Button Content="Open Browser" Command="{Binding OpenBrowserCommand}" Grid.Column="1" />
+		<Button Content="{Binding RecordText}" Command="{Binding SwitchCaptureCommand}" Grid.Column="1" />
 
-		<Button Content="{Binding RecordText}" Command="{Binding SwitchCaptureCommand}" Margin="10" Grid.Column="2" />
-
-		<Button Content="Exit" Command="{Binding ExitCommand}" Grid.Column="3" />
+		<Button Content="Exit" Command="{Binding ExitCommand}" Grid.Column="2" />
 	</Grid>
 	
 </Window>
