@@ -3,9 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33318.248
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Recoder.ScreenCapture", "Recoder.ScreenCapture\Recoder.ScreenCapture.csproj", "{A09E88DD-2E6B-40D6-97D9-563B6583181D}"
-EndProject
-Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "Recoder.Browser", "Recoder.Browser\Recoder.Browser.njsproj", "{79BC9389-5EA6-4C54-A8AF-19E3C3896F88}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Recoder", "Recoder\Recoder.csproj", "{A09E88DD-2E6B-40D6-97D9-563B6583181D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
