@@ -76,7 +76,7 @@ namespace Recoder.ViewModels
 
                 if(System.OperatingSystem.IsWindows())
                 {
-                    startInfo = new("ffmpeg.exe", $"-f gdigrab -i desktop {fileName}");
+                    startInfo = new("ffmpeg", $"-f gdigrab -i desktop {fileName}");
                 }
                 else if(System.OperatingSystem.IsLinux())
                 {
@@ -97,15 +97,24 @@ namespace Recoder.ViewModels
                 ffProcess = Process.Start(startInfo);
                 isRecording = true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.Write(ex.Message);
                 isRecording = false;
             }
         }
 
         private void StopRecord()
         {
-            ffProcess?.StandardInput.Write('q');
+            if(System.OperatingSystem.IsWindows())
+            {
+                ffProcess?.StandardInput.Write('q');
+            }
+            else
+            {
+                ffProcess?.CloseMainWindow();
+            }
+
             ffProcess?.WaitForExit();
             ffProcess?.Dispose();
 
