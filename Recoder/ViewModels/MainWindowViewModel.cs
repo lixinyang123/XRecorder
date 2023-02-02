@@ -17,7 +17,11 @@ namespace Recoder.ViewModels
         /// Private field
         /// </summary>
 
-        private const string browserName = "browser.exe";
+        private const string BROWSER_PATH = "browser.exe";
+
+        private const string FFMPEG_PATH = "ffmpeg.exe";
+
+        private const string VIDEO_PATH = "DesktopCapture";
 
         private Process? ffProcess;
 
@@ -54,6 +58,12 @@ namespace Recoder.ViewModels
             SwitchCaptureCommand = ReactiveCommand.Create(SwitchCapture);
             OpenBrowserCommand = ReactiveCommand.Create(OpenBrowser);
             ExitCommand = ReactiveCommand.Create(Exit);
+
+            if (!Directory.Exists(VIDEO_PATH))
+                Directory.CreateDirectory(VIDEO_PATH);
+
+            if (File.Exists(FFMPEG_PATH))
+                DownloadFFmpegProgress = 100;
         }
 
         private async Task DownloadFFmpeg()
@@ -85,18 +95,14 @@ namespace Recoder.ViewModels
 
         private void StartRecord()
         {
-            string output = Path.Combine("./1Capture.mp4");
-            File.Delete(output);
-
             try
             {
                 string command = FFmpeg.Conversions.New()
                     .AddDesktopStream(null, 30)
-                    .SetInputTime(TimeSpan.FromSeconds(60))
-                    .SetOutput(output)
+                    .SetOutput(Path.Combine(VIDEO_PATH, Guid.NewGuid().ToString() + ".mp4"))
                     .Build();
 
-                ffProcess = Process.Start(new ProcessStartInfo("ffmpeg.exe", command)
+                ffProcess = Process.Start(new ProcessStartInfo(FFMPEG_PATH, command)
                 {
                     CreateNoWindow = true,
                     RedirectStandardInput = true
@@ -121,13 +127,13 @@ namespace Recoder.ViewModels
 
         private void OpenBrowser()
         {
-            if (!File.Exists(browserName))
+            if (!File.Exists(BROWSER_PATH))
             {
                 return;
             }
 
             // 校验文件哈希，防止篡改
-            Process.Start(browserName);
+            Process.Start(BROWSER_PATH);
         }
 
         private void Exit()
