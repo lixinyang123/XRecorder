@@ -5,9 +5,9 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "build-win": "node_modules/.bin/pkg . -t win-x64 --compress GZip",
-    "build-linux": "node_modules/.bin/pkg . -t linux-x64 --compress GZip",
-    "build-macos": "node_modules/.bin/pkg . -t macos-x64 --compress GZip"
+    "build-win": "node_modules/.bin/pkg . -t win-x64",
+    "build-linux": "node_modules/.bin/pkg . -t linux-x64",
+    "build-macos": "node_modules/.bin/pkg . -t macos-x64"
   },
   "devDependencies": {
     "pkg": "^5.8.0"

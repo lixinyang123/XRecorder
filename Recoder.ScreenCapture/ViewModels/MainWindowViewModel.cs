@@ -133,7 +133,10 @@ namespace Recoder.ViewModels
             }
 
             // 校验文件哈希，防止篡改
-            Process.Start(BROWSER_PATH);
+            Process.Start(new ProcessStartInfo(BROWSER_PATH)
+            {
+                CreateNoWindow = true
+            });
         }
 
         private void Exit()
