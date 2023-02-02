@@ -92,6 +92,7 @@ namespace Recoder.ViewModels
             {
                 string command = FFmpeg.Conversions.New()
                     .AddDesktopStream(null, 30)
+                    .SetInputTime(TimeSpan.FromSeconds(60))
                     .SetOutput(output)
                     .Build();
 
