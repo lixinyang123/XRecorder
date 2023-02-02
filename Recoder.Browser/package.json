@@ -1,19 +1,24 @@
 {
   "name": "browser",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Recoder.Browser",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "build-win": "node_modules/.bin/pkg . -t node18-win-x64 --out-path=dist/",
-    "build-linux": "node_modules/.bin/pkg . -t node18-linux-x64 --out-path=dist/",
-    "build-macos": "node_modules/.bin/pkg . -t node18-macos-x64 --out-path=dist/"
+    "build-win": "node_modules/.bin/pkg . -t node18-win-x64",
+    "build-linux": "node_modules/.bin/pkg . -t node18-linux-x64",
+    "build-macos": "node_modules/.bin/pkg . -t node18-macos-x64"
   },
-  "bin": "app.js",
   "devDependencies": {
     "pkg": "^5.8.0"
   },
   "dependencies": {
     "puppeteer": "^19.6.2"
+  },
+  "bin": "app.js",
+  "pkg": {
+    "scripts": "build/**/*.js",
+    "assets": "chromium",
+    "outputPath": "dist"
   }
 }

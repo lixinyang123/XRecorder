@@ -28,6 +28,7 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include=".puppeteerrc.cjs" />
     <Content Include="app.js" />
     <Content Include="package.json" />
     <Content Include="README.md" />
