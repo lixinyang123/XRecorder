@@ -18,7 +18,7 @@ namespace Recoder.ViewModels
 
         private Process? ffProcess;
 
-        private bool isRecording = false;
+        private bool isRecording;
 
         private readonly IClassicDesktopStyleApplicationLifetime applicationLifetime;
 
