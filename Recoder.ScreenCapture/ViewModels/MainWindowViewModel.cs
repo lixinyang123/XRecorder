@@ -7,7 +7,6 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xabe.FFmpeg;
-using Xabe.FFmpeg.Downloader;
 
 namespace Recoder.ViewModels
 {
@@ -41,8 +40,6 @@ namespace Recoder.ViewModels
         /// Binding Commands
         /// </summary>
 
-        public ICommand DownloadFFmpegCommand { get; set; }
-
         public ICommand SwitchCaptureCommand { get; set; }
 
         public ICommand OpenBrowserCommand { get; set; }
@@ -54,7 +51,6 @@ namespace Recoder.ViewModels
             applicationLifetime = Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime
                 ?? throw new NullReferenceException();
 
-            DownloadFFmpegCommand = ReactiveCommand.Create(DownloadFFmpeg);
             SwitchCaptureCommand = ReactiveCommand.Create(SwitchCapture);
             OpenBrowserCommand = ReactiveCommand.Create(OpenBrowser);
             ExitCommand = ReactiveCommand.Create(Exit);
@@ -64,19 +60,6 @@ namespace Recoder.ViewModels
 
             if (File.Exists(FFMPEG_PATH))
                 DownloadFFmpegProgress = 100;
-        }
-
-        private async Task DownloadFFmpeg()
-        {
-            Progress<ProgressInfo> progress = new();
-
-            progress.ProgressChanged += (object? sender, ProgressInfo e) =>
-            {
-                DownloadFFmpegProgress = (double)e.DownloadedBytes / e.TotalBytes * 100;
-                this.RaisePropertyChanged(nameof(DownloadFFmpegProgress));
-            };
-
-            await FFmpegDownloader.GetLatestVersion(FFmpegVersion.Official, progress);
         }
 
         private void SwitchCapture()
