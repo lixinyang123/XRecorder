@@ -14,8 +14,6 @@ namespace Recoder.ViewModels
         /// Private field
         /// </summary>
 
-        private const string BROWSER_PATH = "browser.exe";
-
         private const string VIDEO_PATH = "DesktopCapture";
 
         private Process? ffProcess;
@@ -71,18 +69,18 @@ namespace Recoder.ViewModels
         {
             try
             {
-                ProcessStartInfo startInfo = new();
+                ProcessStartInfo startInfo;
                 string fileName = Path.Combine(VIDEO_PATH, Guid.NewGuid().ToString() + ".mp4");
 
-                if(System.OperatingSystem.IsWindows())
+                if (OperatingSystem.IsWindows())
                 {
                     startInfo = new("ffmpeg", $"-f gdigrab -i desktop {fileName}");
                 }
-                else if(System.OperatingSystem.IsLinux())
+                else if (OperatingSystem.IsLinux())
                 {
                     startInfo = new("ffmpeg", $"-f x11grab -i :0.0+0,0 {fileName}");
                 }
-                else if(System.OperatingSystem.IsMacOS())
+                else if (OperatingSystem.IsMacOS())
                 {
                     startInfo = new("ffmpeg", $"-f avfoundation -i 0 {fileName}");
                 }
@@ -106,7 +104,7 @@ namespace Recoder.ViewModels
 
         private void StopRecord()
         {
-            if(System.OperatingSystem.IsWindows())
+            if (OperatingSystem.IsWindows())
             {
                 ffProcess?.StandardInput.Write('q');
             }
@@ -123,13 +121,26 @@ namespace Recoder.ViewModels
 
         private void OpenBrowser()
         {
-            if (!File.Exists(BROWSER_PATH))
+            string path;
+
+            if(OperatingSystem.IsWindows())
             {
-                return;
+                path = Path.Combine("chrome-win", "chrome.exe");
+            }
+            else if(OperatingSystem.IsLinux())
+            {
+                path = Path.Combine("chrome-win", "chrome.exe");
+            }
+            else if(OperatingSystem.IsMacOS())
+            {
+                path = Path.Combine("chrome-win", "chrome.exe");
+            }
+            else
+            {
+                throw new PlatformNotSupportedException();
             }
 
-            // У���ļ���ϣ����ֹ�۸�
-            Process.Start(new ProcessStartInfo(BROWSER_PATH)
+            Process.Start(new ProcessStartInfo(path)
             {
                 CreateNoWindow = true
             });
