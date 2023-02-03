@@ -22,13 +22,13 @@
     </Design.DataContext>
 
 	<StackPanel Orientation="Horizontal">
-		<Button Content="Open Browser" Command="{Binding OpenBrowserCommand}" Margin="5" />
+		<Button Content="启动浏览器" Command="{Binding OpenBrowserCommand}" Margin="5" />
 
-		<Button Content="Screenshot" Command="{Binding ScreenshotCommand}" Margin="5" />
+		<Button Content="网页截图" Command="{Binding ScreenshotCommand}" Margin="5" />
 
 		<Button Content="{Binding RecordText}" Command="{Binding SwitchCaptureCommand}" Margin="5" />
 
-		<Button Content="Exit" Command="{Binding ExitCommand}" Grid.Column="3" Margin="5" />
+		<Button Content="退出" Command="{Binding ExitCommand}" Grid.Column="3" Margin="5" />
 	</StackPanel>
 	
 </Window>

@@ -26,7 +26,7 @@ namespace Recoder.ViewModels
         /// Binding Properties
         /// </summary>
 
-        public string RecordText => ffmpeg.IsRecording ? "Stop" : "Start";
+        public string RecordText => ffmpeg.IsRecording ? "½áÊøÂ¼ÆÁ" : "¿ªÊ¼Â¼ÆÁ";
 
         /// <summary>
         /// Binding Commands
