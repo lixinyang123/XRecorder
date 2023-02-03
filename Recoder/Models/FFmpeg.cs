@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Avalonia.Media;
+using System;
 using System.Diagnostics;
 using System.IO;
 
@@ -10,11 +11,18 @@ namespace Recoder.Models
 
         private readonly string savePath = string.Empty;
 
+        private string fileName = string.Empty;
+
         public bool IsRecording { get; set; }
 
         public FFmpeg(string savePath)
         {
             this.savePath = savePath;
+        }
+
+        private static string GenCommand(string format, string input, string fileName, string color = "red", string text = "fasuo")
+        {
+            return $"-f {format} -i {input} -vf \"drawtext=fontsize=160:fontcolor={color}:text='{text}'\" -c:v libx264 -an {fileName}";
         }
 
         public void StartRecord()
@@ -25,19 +33,19 @@ namespace Recoder.Models
             try
             {
                 ProcessStartInfo startInfo;
-                string fileName = Path.Combine(savePath, Guid.NewGuid().ToString() + ".mp4");
+                fileName = Path.Combine(savePath, Guid.NewGuid().ToString() + ".mp4");
 
                 if (OperatingSystem.IsWindows())
                 {
-                    startInfo = new("ffmpeg", $"-f gdigrab -i desktop {fileName}");
+                    startInfo = new("ffmpeg", GenCommand("gdigrab", "desktop", fileName));
                 }
                 else if (OperatingSystem.IsLinux())
                 {
-                    startInfo = new("ffmpeg", $"-f x11grab -i :0.0+0,0 {fileName}");
+                    startInfo = new("ffmpeg", GenCommand("x11grab", ":0.0+0,0", fileName));
                 }
                 else if (OperatingSystem.IsMacOS())
                 {
-                    startInfo = new("ffmpeg", $"-f avfoundation -i 0 {fileName}");
+                    startInfo = new("ffmpeg", GenCommand("avfoundation", "0", fileName));
                 }
                 else
                 {
