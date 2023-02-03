@@ -8,14 +8,13 @@ namespace Recoder.Models
     {
         private Process? ffProcess;
 
-        private const string VIDEO_PATH = "DesktopCapture";
+        private readonly string savePath = string.Empty;
 
         public bool IsRecording { get; set; }
 
-        public FFmpeg()
+        public FFmpeg(string savePath)
         {
-            if (!Directory.Exists(VIDEO_PATH))
-                Directory.CreateDirectory(VIDEO_PATH);
+            this.savePath = savePath;
         }
 
         public void StartRecord()
@@ -28,7 +27,7 @@ namespace Recoder.Models
             try
             {
                 ProcessStartInfo startInfo;
-                string fileName = Path.Combine(VIDEO_PATH, Guid.NewGuid().ToString() + ".mp4");
+                string fileName = Path.Combine(savePath, Guid.NewGuid().ToString() + ".mp4");
 
                 if (OperatingSystem.IsWindows())
                 {

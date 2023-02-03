@@ -6,7 +6,19 @@ namespace Recoder.Models
 {
     public class Chromium
     {
-        public void Open()
+        private readonly string savePath = string.Empty;
+
+        public Chromium(string savePath)
+        {
+            this.savePath = savePath;
+        }
+
+        public void LauncherPuppeteer()
+        {
+
+        }
+
+        public static void Open()
         {
             string path;
 

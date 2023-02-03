@@ -3,6 +3,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using ReactiveUI;
 using Recoder.Models;
 using System;
+using System.IO;
 using System.Windows.Input;
 
 namespace Recoder.ViewModels
@@ -12,6 +13,9 @@ namespace Recoder.ViewModels
         /// <summary>
         /// Private field
         /// </summary>
+        
+        private const string CAPTURE_RESOURCES = "CaptureResources";
+
         private readonly FFmpeg ffmpeg;
 
         private readonly Chromium chromium;
@@ -36,8 +40,13 @@ namespace Recoder.ViewModels
 
         public MainWindowViewModel()
         {
-            ffmpeg = new FFmpeg();
-            chromium = new Chromium();
+            string savePath = Path.Combine(CAPTURE_RESOURCES, Guid.NewGuid().ToString());
+
+            if (!Directory.Exists(savePath))
+                Directory.CreateDirectory(savePath);
+
+            ffmpeg = new FFmpeg(savePath);
+            chromium = new Chromium(savePath);
 
             applicationLifetime = Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime
                 ?? throw new NullReferenceException();
@@ -63,7 +72,7 @@ namespace Recoder.ViewModels
 
         private void OpenBrowser()
         {
-            chromium.Open();
+            Chromium.Open();
         }
 
         private void Exit()
