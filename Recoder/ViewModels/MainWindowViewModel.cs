@@ -3,8 +3,6 @@ using Avalonia.Controls.ApplicationLifetimes;
 using ReactiveUI;
 using Recoder.Models;
 using System;
-using System.Diagnostics;
-using System.IO;
 using System.Windows.Input;
 
 namespace Recoder.ViewModels
@@ -15,6 +13,8 @@ namespace Recoder.ViewModels
         /// Private field
         /// </summary>
         private readonly FFmpeg ffmpeg;
+
+        private readonly Chromium chromium;
 
         private readonly IClassicDesktopStyleApplicationLifetime applicationLifetime;
 
@@ -37,6 +37,7 @@ namespace Recoder.ViewModels
         public MainWindowViewModel()
         {
             ffmpeg = new FFmpeg();
+            chromium = new Chromium();
 
             applicationLifetime = Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime
                 ?? throw new NullReferenceException();
@@ -62,29 +63,7 @@ namespace Recoder.ViewModels
 
         private void OpenBrowser()
         {
-            string path;
-
-            if(OperatingSystem.IsWindows())
-            {
-                path = Path.Combine("chrome-win", "chrome.exe");
-            }
-            else if(OperatingSystem.IsLinux())
-            {
-                path = Path.Combine("chrome-win", "chrome.exe");
-            }
-            else if(OperatingSystem.IsMacOS())
-            {
-                path = Path.Combine("chrome-win", "chrome.exe");
-            }
-            else
-            {
-                throw new PlatformNotSupportedException();
-            }
-
-            Process.Start(new ProcessStartInfo(path, "baidu.com")
-            {
-                CreateNoWindow = true
-            });
+            chromium.Open();
         }
 
         private void Exit()
