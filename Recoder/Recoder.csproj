@@ -7,7 +7,7 @@
         <TrimMode>copyused</TrimMode>
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
         <Platforms>AnyCPU</Platforms>
-		<PublishAot>true</PublishAot>
+		<!--<PublishAot>true</PublishAot>-->
 		<StripSymbols>true</StripSymbols>
     </PropertyGroup>
 	

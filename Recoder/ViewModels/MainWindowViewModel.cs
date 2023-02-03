@@ -36,6 +36,8 @@ namespace Recoder.ViewModels
 
         public ICommand OpenBrowserCommand { get; set; }
 
+        public ICommand ScreenshotCommand { get; set; }
+
         public ICommand ExitCommand { get; set; }
 
         public MainWindowViewModel()
@@ -53,6 +55,7 @@ namespace Recoder.ViewModels
 
             SwitchCaptureCommand = ReactiveCommand.Create(SwitchCapture);
             OpenBrowserCommand = ReactiveCommand.Create(OpenBrowser);
+            ScreenshotCommand = ReactiveCommand.Create(Screenshot);
             ExitCommand = ReactiveCommand.Create(Exit);
         }
 
@@ -72,13 +75,20 @@ namespace Recoder.ViewModels
 
         private void OpenBrowser()
         {
-            Chromium.Open();
+            chromium.LauncherPuppeteer();
+            //chromium.Open();
+        }
+
+        private void Screenshot()
+        {
+            chromium.ScreenShot();
         }
 
         private void Exit()
         {
             if (ffmpeg.IsRecording)
             {
+                chromium.Close();
                 ffmpeg.StopRecord();
             }
 

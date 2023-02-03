@@ -20,9 +20,7 @@ namespace Recoder.Models
         public void StartRecord()
         {
             if(IsRecording)
-            {
                 return;
-            }
 
             try
             {
@@ -62,9 +60,7 @@ namespace Recoder.Models
         public void StopRecord()
         {
             if(!IsRecording)
-            {
                 return;
-            }
 
             if (OperatingSystem.IsWindows())
             {

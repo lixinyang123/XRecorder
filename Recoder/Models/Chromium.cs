@@ -1,48 +1,90 @@
 ﻿using System.Diagnostics;
 using System;
 using System.IO;
+using PuppeteerSharp;
+using System.Linq;
 
 namespace Recoder.Models
 {
     public class Chromium
     {
+        private readonly string chromiumPath = string.Empty;
+
         private readonly string savePath = string.Empty;
+
+        private IBrowser? browser;
 
         public Chromium(string savePath)
         {
             this.savePath = savePath;
-        }
-
-        public void LauncherPuppeteer()
-        {
-
-        }
-
-        public static void Open()
-        {
-            string path;
 
             if (OperatingSystem.IsWindows())
             {
-                path = Path.Combine("chrome-win", "chrome.exe");
+                chromiumPath = Path.Combine("chrome-win", "chrome.exe");
             }
             else if (OperatingSystem.IsLinux())
             {
-                path = Path.Combine("chrome-win", "chrome.exe");
+                chromiumPath = Path.Combine("chrome-win", "chrome");
             }
             else if (OperatingSystem.IsMacOS())
             {
-                path = Path.Combine("chrome-win", "chrome.exe");
+                chromiumPath = Path.Combine("chrome-win", "chrome");
             }
             else
             {
                 throw new PlatformNotSupportedException();
             }
+        }
 
-            Process.Start(new ProcessStartInfo(path, "baidu.com")
+        public async void LauncherPuppeteer()
+        {
+            if (browser is not null)
+                return;
+
+            browser = await Puppeteer.LaunchAsync(new LaunchOptions 
+            { 
+                Headless = false,
+                ExecutablePath = chromiumPath,
+                DefaultViewport = null
+            });
+
+            browser.Closed += (object? sender, EventArgs e) =>
+            {
+                browser.Dispose();
+                browser = null;
+            };
+
+            IPage page = await browser.NewPageAsync();
+            await page.GoToAsync("https://www.baidu.com");
+        }
+
+        public async void ScreenShot()
+        {
+            try
+            {
+                IPage[] pages = await (browser?.PagesAsync() ?? throw new NullReferenceException());
+                pages.ToList().ForEach(async page =>
+                {
+                    await page.ScreenshotAsync(Path.Combine(savePath, Guid.NewGuid().ToString() + ".png"));
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        public void Open()
+        {
+            Process.Start(new ProcessStartInfo(chromiumPath, "baidu.com")
             {
                 CreateNoWindow = true
             });
+        }
+
+        public async void Close()
+        {
+            await (browser?.CloseAsync() ?? throw new NullReferenceException());
         }
     }
 }

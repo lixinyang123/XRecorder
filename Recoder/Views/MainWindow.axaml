@@ -21,18 +21,14 @@
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
-	<Grid>
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="140" />
-			<ColumnDefinition Width="*" />
-			<ColumnDefinition Width="55" />
-		</Grid.ColumnDefinitions>
+	<StackPanel Orientation="Horizontal">
+		<Button Content="Open Browser" Command="{Binding OpenBrowserCommand}" Margin="5" />
 
-		<Button Content="Open Browser" Command="{Binding OpenBrowserCommand}" Grid.Column="0" Margin="10" />
+		<Button Content="Screenshot" Command="{Binding ScreenshotCommand}" Margin="5" />
 
-		<Button Content="{Binding RecordText}" Command="{Binding SwitchCaptureCommand}" Grid.Column="1" />
+		<Button Content="{Binding RecordText}" Command="{Binding SwitchCaptureCommand}" Margin="5" />
 
-		<Button Content="Exit" Command="{Binding ExitCommand}" Grid.Column="2" />
-	</Grid>
+		<Button Content="Exit" Command="{Binding ExitCommand}" Grid.Column="3" Margin="5" />
+	</StackPanel>
 	
 </Window>
