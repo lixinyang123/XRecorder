@@ -22,7 +22,7 @@ namespace Recoder.Models
 
         private static string GenCommand(string format, string input, string fileName, string color = "red", string text = "fasuo")
         {
-            return $"-f {format} -i {input} -vf \"drawtext=fontsize=160:fontcolor={color}:text='{text}'\" -c:v libx264 -an {fileName}";
+            return $"-f {format} -i {input} -vf \"drawtext=fontsize=160:fontcolor={color}:text='{text}'\" -c:v libx264 -an -preset ultrafast -rtbufsize 3500k {fileName}";
         }
 
         public void StartRecord()
