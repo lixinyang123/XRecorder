@@ -32,8 +32,18 @@
         <TrimmableAssembly Include="Avalonia.Themes.Fluent" />
         <TrimmableAssembly Include="Avalonia.Themes.Default" />
     </ItemGroup>
-	
-    <ItemGroup>
+
+	<Target Name="CopyMyFolder" BeforeTargets="PrepareForBuild">
+		<ItemGroup>
+			<SomeFolder Include="MyFolder\**" />
+		</ItemGroup>
+		<Copy SourceFiles="@(SomeFolder)"
+			  DestinationFiles="$(OutputPath)\%(RecursiveDir)%(Filename)%(Extension)"
+			  SkipUnchangedFiles="True">
+		</Copy>
+	</Target>
+
+	<ItemGroup>
         <PackageReference Include="Avalonia" Version="11.0.0-preview4" />
         <PackageReference Include="Avalonia.Desktop" Version="11.0.0-preview4" />
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
