@@ -1,12 +1,12 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using ReactiveUI;
-using Recoder.Models;
+using Recorder.Models;
 using System;
 using System.IO;
 using System.Windows.Input;
 
-namespace Recoder.ViewModels
+namespace Recorder.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
@@ -26,7 +26,7 @@ namespace Recoder.ViewModels
         /// Binding Properties
         /// </summary>
 
-        public string RecordText => ffmpeg.IsRecording ? "½áÊøÂ¼ÆÁ" : "¿ªÊ¼Â¼ÆÁ";
+        public string RecordText => ffmpeg.IsRecording ? "ç»“æŸå½•åˆ¶" : "å¼€å§‹å½•åˆ¶";
 
         /// <summary>
         /// Binding Commands

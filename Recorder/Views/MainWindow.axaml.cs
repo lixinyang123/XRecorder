@@ -1,6 +1,6 @@
 using Avalonia.Controls;
 
-namespace Recoder.Views
+namespace Recorder.Views
 {
     public partial class MainWindow : Window
     {

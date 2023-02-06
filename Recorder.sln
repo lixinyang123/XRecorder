@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33318.248
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Recoder", "Recoder\Recoder.csproj", "{A09E88DD-2E6B-40D6-97D9-563B6583181D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Recorder", "Recorder\Recorder.csproj", "{A09E88DD-2E6B-40D6-97D9-563B6583181D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

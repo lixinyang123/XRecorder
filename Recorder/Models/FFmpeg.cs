@@ -3,7 +3,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 
-namespace Recoder.Models
+namespace Recorder.Models
 {
     public class FFmpeg
     {
