@@ -33,12 +33,12 @@
         <TrimmableAssembly Include="Avalonia.Themes.Default" />
     </ItemGroup>
 
-	<Target Name="CopyMyFolder" BeforeTargets="PrepareForBuild">
-		<ItemGroup>
-			<SomeFolder Include="MyFolder\**" />
-		</ItemGroup>
-		<Copy SourceFiles="@(SomeFolder)" DestinationFiles="$(OutputPath)\%(RecursiveDir)%(Filename)%(Extension)" SkipUnchangedFiles="True">
-		</Copy>
+	<ItemGroup>
+		<LibFolder Include="lib\**" />
+	</ItemGroup>
+
+	<Target Name="CopyLibFolder" BeforeTargets="PrepareForBuild">
+		<Copy SourceFiles="@(LibFolder)" DestinationFiles="$(OutputPath)\%(RecursiveDir)%(Filename)%(Extension)" />
 	</Target>
 
 	<ItemGroup>

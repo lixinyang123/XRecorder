@@ -55,7 +55,7 @@ namespace Recoder.Models
             };
 
             IPage page = await browser.NewPageAsync();
-            await page.GoToAsync("https://www.baidu.com");
+            _ = page.GoToAsync("https://www.baidu.com");
         }
 
         public async void ScreenShot()
