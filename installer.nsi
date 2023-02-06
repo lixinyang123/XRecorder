@@ -59,8 +59,7 @@ Section "Dummy Section" SecDummy
   SetRegView 64
   WriteRegStr HKCR "Recorder" "" "URL:Recorder"
   WriteRegStr HKCR "Recorder" "URL Protocol" ""
-  ;cmd /C "cd /D "D:\lixin\InProgress\Recorder\Recorder\bin\Release\net7.0\win-x64" & start /b Recorder.exe --open-url %1"
-  WriteRegStr HKCR "Recorder\shell\open\command" "" 'cmd /C "cd /D "$LOCALAPPDATA/Recorder" & start /b Recorder.exe" "--open-url"  "--" "%1"'
+  WriteRegStr HKCR "Recorder\shell\open\command" "" '"$LOCALAPPDATA/Recorder/Recorder.exe" "--open-url"  "--" "%1"'
   
   ;Create uninstaller
   WriteUninstaller "$INSTDIR\Uninstall.exe"
