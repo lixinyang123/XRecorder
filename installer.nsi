@@ -16,7 +16,7 @@
   Unicode True
 
   ;Default installation folder
-  ;InstallDir "$LOCALAPPDATA\Modern UI Test"
+  InstallDir "$LOCALAPPDATA\Recoder"
   
   ;Get installation folder from registry if available
   ;InstallDirRegKey HKCU "Software\Modern UI Test" ""
@@ -53,10 +53,14 @@ Section "Dummy Section" SecDummy
   SetOutPath "$INSTDIR"
   
   ;ADD YOUR OWN FILES HERE...
-  File /nonfatal /r "Recoder\bin\Release\net7.0\win-x64"
+  File /nonfatal /r "Recoder\bin\Release\net7.0\win-x64\*.*"
   
   ;Store installation folder
-  ;WriteRegStr HKCU "Software\Modern UI Test" "" $INSTDIR
+  WriteRegStr HKCR "recoder" "@" "recoder"
+  WriteRegStr HKCR "recoder" "URL Protocol" "$LOCALAPPDATA\Recoder\Recoder.exe"
+  WriteRegStr HKCR "recoder\shell" "@" "open"
+  WriteRegStr HKCR "recoder\shell\open" "@" "open"
+  WriteRegStr HKCR "recoder\shell\open\command" "@" '"E:\Program Files\NSIS\NSIS.exe" "--open-url"  "--" "%1"'
   
   ;Create uninstaller
   WriteUninstaller "$INSTDIR\Uninstall.exe"
@@ -71,7 +75,7 @@ SectionEnd
 
   ;Assign language strings to sections
   !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
-    !insertmacro MUI_DESCRIPTION_TEXT ${SecDummy} $(DESC_SecDummy)
+  !insertmacro MUI_DESCRIPTION_TEXT ${SecDummy} $(DESC_SecDummy)
   !insertmacro MUI_FUNCTION_DESCRIPTION_END
 
 ;--------------------------------
@@ -85,6 +89,6 @@ Section "Uninstall"
 
   RMDir "$INSTDIR"
 
-  ;DeleteRegKey /ifempty HKCU "Software\Modern UI Test"
+  DeleteRegKey /ifempty HKCR "recoder"
 
 SectionEnd
