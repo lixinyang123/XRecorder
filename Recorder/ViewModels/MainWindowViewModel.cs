@@ -26,7 +26,7 @@ namespace Recorder.ViewModels
         /// Binding Properties
         /// </summary>
 
-        public string RecordText => ffmpeg.IsRecording ? "����¼��" : "��ʼ¼��";
+        public string RecordText => ffmpeg.IsRecording ? "结束录制" : "开始录制";
 
         /// <summary>
         /// Binding Commands
