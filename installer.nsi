@@ -22,7 +22,7 @@
   ;InstallDirRegKey HKCU "Software\Modern UI Test" ""
 
   ;Request application privileges for Windows Vista
-  RequestExecutionLevel user
+  RequestExecutionLevel admin
 
 ;--------------------------------
 ;Interface Settings
