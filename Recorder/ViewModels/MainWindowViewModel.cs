@@ -14,8 +14,6 @@ namespace Recorder.ViewModels
         /// Private field
         /// </summary>
         
-        private const string CAPTURE_RESOURCES = "CaptureResources";
-
         private readonly FFmpeg ffmpeg;
 
         private readonly Chromium chromium;
@@ -42,7 +40,7 @@ namespace Recorder.ViewModels
 
         public MainWindowViewModel()
         {
-            string savePath = Path.Combine(CAPTURE_RESOURCES, Guid.NewGuid().ToString());
+            string savePath = Path.Combine(this.captureResources, Guid.NewGuid().ToString());
 
             if (!Directory.Exists(savePath))
                 Directory.CreateDirectory(savePath);
