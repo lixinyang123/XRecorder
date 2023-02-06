@@ -2,11 +2,11 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Platform;
-using Recoder.ViewModels;
-using Recoder.Views;
+using Recorder.ViewModels;
+using Recorder.Views;
 using System;
 
-namespace Recoder
+namespace Recorder
 {
     public partial class App : Application
     {

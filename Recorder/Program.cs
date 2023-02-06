@@ -2,7 +2,7 @@ using Avalonia;
 using Avalonia.ReactiveUI;
 using System;
 
-namespace Recoder
+namespace Recorder
 {
     internal class Program
     {

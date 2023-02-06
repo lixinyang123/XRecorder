@@ -4,7 +4,7 @@ using System.IO;
 using PuppeteerSharp;
 using System.Linq;
 
-namespace Recoder.Models
+namespace Recorder.Models
 {
     public class Chromium
     {

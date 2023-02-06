@@ -1,4 +1,4 @@
-$LibFolder = "Recoder/lib"
+$LibFolder = "Recorder/lib"
 
 if (Test-Path $LibFolder) {
     Remove-Item $LibFolder -Recurse

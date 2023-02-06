@@ -1,9 +1,9 @@
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
-using Recoder.ViewModels;
+using Recorder.ViewModels;
 using System;
 
-namespace Recoder
+namespace Recorder
 {
     public class ViewLocator : IDataTemplate
     {

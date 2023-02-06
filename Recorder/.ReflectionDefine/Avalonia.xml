@@ -1,6 +1,6 @@
 ﻿<linker>
 	<!-- App -->
-	<assembly fullname="Recoder" preserve="All" />
+	<assembly fullname="Recorder" preserve="All" />
 	<!-- Avalonia Themes -->
 	<assembly fullname="Avalonia.Themes.Fluent" preserve="All" />
 </linker>
