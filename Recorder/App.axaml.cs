@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Platform;
+using Recorder.Models;
 using Recorder.ViewModels;
 using Recorder.Views;
 using System;
@@ -13,6 +14,7 @@ namespace Recorder
         public override void Initialize()
         {
             AvaloniaXamlLoader.Load(this);
+            DataContext = new AppDataContext();
         }
 
         public override void OnFrameworkInitializationCompleted()

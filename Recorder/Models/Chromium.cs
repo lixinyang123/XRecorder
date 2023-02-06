@@ -8,6 +8,8 @@ namespace Recorder.Models
 {
     public class Chromium
     {
+        private readonly AppDataContext appDataContext;
+
         private readonly string chromiumPath = string.Empty;
 
         private readonly string savePath = string.Empty;
@@ -16,19 +18,20 @@ namespace Recorder.Models
 
         public Chromium(string savePath)
         {
+            appDataContext = App.Current?.DataContext as AppDataContext ?? throw new NullReferenceException();
             this.savePath = savePath;
 
             if (OperatingSystem.IsWindows())
             {
-                chromiumPath = Path.Combine("chrome-win", "chrome.exe");
+                chromiumPath = Path.Combine(appDataContext.appPath, "chrome-win", "chrome.exe");
             }
             else if (OperatingSystem.IsLinux())
             {
-                chromiumPath = Path.Combine("chrome-win", "chrome");
+                chromiumPath = Path.Combine(appDataContext.appPath, "chrome-win", "chrome");
             }
             else if (OperatingSystem.IsMacOS())
             {
-                chromiumPath = Path.Combine("chrome-win", "chrome");
+                chromiumPath = Path.Combine(appDataContext.appPath, "chrome-win", "chrome");
             }
             else
             {

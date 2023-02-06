@@ -13,6 +13,8 @@ namespace Recorder.ViewModels
         /// <summary>
         /// Private field
         /// </summary>
+
+        private readonly AppDataContext appDataContext;
         
         private readonly FFmpeg ffmpeg;
 
@@ -40,7 +42,8 @@ namespace Recorder.ViewModels
 
         public MainWindowViewModel()
         {
-            string savePath = Path.Combine(this.captureResources, Guid.NewGuid().ToString());
+            appDataContext = App.Current?.DataContext as AppDataContext ?? throw new NullReferenceException();
+            string savePath = Path.Combine(appDataContext.captureResources, Guid.NewGuid().ToString());
 
             if (!Directory.Exists(savePath))
                 Directory.CreateDirectory(savePath);
