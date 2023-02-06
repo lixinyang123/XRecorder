@@ -2,6 +2,8 @@ Write-Output "===================================="
 Write-Output "|         Recorder Builder         |"
 Write-Output "===================================="
 
+# ====================== Check Platform =====================
+
 $Platform = "UnSupport"
 
 if($IsWindows) {
@@ -19,6 +21,8 @@ if($IsMacOS) {
 if ("UnSupport" -eq $Platform) {
     Throw "UnSupport Platform"
 }
+
+# ======================== Build App ========================
 
 $LibFolder = "Recorder/lib"
 $PublishFolder = "Recorder/bin/Release/net7.0/$Platform/publish"
