@@ -1,4 +1,5 @@
 using ReactiveUI;
+using System;
 using System.IO;
 
 namespace Recorder.Models
@@ -13,7 +14,15 @@ namespace Recorder.Models
         {
             // Get assembly path
             string hostName = System.Reflection.Assembly.GetExecutingAssembly().Location;
-            appPath = hostName.Substring(0, hostName.LastIndexOf("\\"));
+
+            if (OperatingSystem.IsWindows())
+            {
+                appPath = hostName.Substring(0, hostName.LastIndexOf("\\"));
+            }
+            else
+            {
+                appPath = hostName.Substring(0, hostName.LastIndexOf("/"));
+            }
             
             captureResources = Path.Combine(appPath, "CaptureResources");
         }
