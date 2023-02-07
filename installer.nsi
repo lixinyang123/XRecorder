@@ -60,7 +60,9 @@ Section "Dummy Section" SecDummy
   WriteRegStr HKCR "Recorder" "" "URL:Recorder"
   WriteRegStr HKCR "Recorder" "URL Protocol" ""
   WriteRegStr HKCR "Recorder\shell\open\command" "" '"$INSTDIR/Recorder.exe" "--open-url"  "--" "%1"'
-  
+
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Product"  "Recorder" "Recorder"
+
   ;Create uninstaller
   WriteUninstaller "$INSTDIR\Uninstall.exe"
 
