@@ -59,7 +59,7 @@ Section "Dummy Section" SecDummy
   SetRegView 64
   WriteRegStr HKCR "Recorder" "" "URL:Recorder"
   WriteRegStr HKCR "Recorder" "URL Protocol" ""
-  WriteRegStr HKCR "Recorder\shell\open\command" "" '"$LOCALAPPDATA/Recorder/Recorder.exe" "--open-url"  "--" "%1"'
+  WriteRegStr HKCR "Recorder\shell\open\command" "" '"$INSTDIR/Recorder.exe" "--open-url"  "--" "%1"'
   
   ;Create uninstaller
   WriteUninstaller "$INSTDIR\Uninstall.exe"
@@ -84,9 +84,7 @@ Section "Uninstall"
 
   ;ADD YOUR OWN FILES HERE...
 
-  Delete "$INSTDIR\*.*"
-
-  RMDir "$INSTDIR"
+  RMDir /r "$INSTDIR"
 
   DeleteRegKey /ifempty HKCR "Recorder"
 
