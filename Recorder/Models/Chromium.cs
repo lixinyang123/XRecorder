@@ -16,6 +16,8 @@ namespace Recorder.Models
 
         private IBrowser? browser;
 
+        public bool IsRunning => !browser?.IsClosed ?? false;
+
         public Chromium(string savePath)
         {
             appDataContext = App.Current?.DataContext as AppDataContext ?? throw new NullReferenceException();
@@ -53,7 +55,6 @@ namespace Recorder.Models
 
             browser.Closed += (object? sender, EventArgs e) =>
             {
-                browser.Dispose();
                 browser = null;
             };
 
@@ -87,7 +88,11 @@ namespace Recorder.Models
 
         public async void Close()
         {
+            if(browser is null)
+                return;
+            
             await (browser?.CloseAsync() ?? throw new NullReferenceException());
+            browser?.Dispose();
         }
     }
 }

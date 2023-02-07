@@ -87,9 +87,13 @@ namespace Recorder.ViewModels
 
         private void Exit()
         {
-            if (ffmpeg.IsRecording)
+            if(chromium.IsRunning)
             {
                 chromium.Close();
+            }
+
+            if (ffmpeg.IsRecording)
+            {
                 ffmpeg.StopRecord();
             }
 
