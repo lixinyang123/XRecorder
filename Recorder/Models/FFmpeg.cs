@@ -41,7 +41,7 @@ namespace Recorder.Models
                 }
                 else if (OperatingSystem.IsLinux())
                 {
-                    startInfo = new("ffmpeg", GenCommand("x11grab", ":0.0+0,0", fileName));
+                    startInfo = new("ffmpeg", GenCommand("x11grab", ":1", fileName));
                 }
                 else if (OperatingSystem.IsMacOS())
                 {
@@ -69,16 +69,8 @@ namespace Recorder.Models
         {
             if(!IsRecording)
                 return;
-
-            if (OperatingSystem.IsWindows())
-            {
-                ffProcess?.StandardInput.Write('q');
-            }
-            else
-            {
-                ffProcess?.CloseMainWindow();
-            }
-
+            
+            ffProcess?.StandardInput.Write('q');
             ffProcess?.WaitForExit();
             ffProcess?.Dispose();
 
