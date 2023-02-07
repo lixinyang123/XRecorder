@@ -27,11 +27,11 @@ namespace Recorder.Models
             }
             else if (OperatingSystem.IsLinux())
             {
-                chromiumPath = Path.Combine(appDataContext.appPath, "chrome-win", "chrome");
+                chromiumPath = Path.Combine(appDataContext.appPath, "chrome-linux", "chrome");
             }
             else if (OperatingSystem.IsMacOS())
             {
-                chromiumPath = Path.Combine(appDataContext.appPath, "chrome-win", "chrome");
+                chromiumPath = Path.Combine(appDataContext.appPath, "chrome-macos", "chrome");
             }
             else
             {
