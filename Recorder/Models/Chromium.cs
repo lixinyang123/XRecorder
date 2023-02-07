@@ -33,7 +33,7 @@ namespace Recorder.Models
             }
             else if (OperatingSystem.IsMacOS())
             {
-                chromiumPath = Path.Combine(appDataContext.appPath, "chrome-macos", "chrome");
+                chromiumPath = Path.Combine(appDataContext.appPath, "chrome-osx", "chrome");
             }
             else
             {
@@ -56,6 +56,11 @@ namespace Recorder.Models
             browser.Closed += (object? sender, EventArgs e) =>
             {
                 browser = null;
+            };
+
+            browser.TargetChanged += (object? sender, TargetChangedArgs e) => 
+            {
+                // Get the target IP
             };
 
             IPage page = await browser.NewPageAsync();
