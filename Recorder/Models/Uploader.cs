@@ -114,13 +114,15 @@ namespace Recorder.Models
                     httpClient.DefaultRequestHeaders.Add("Authorization", "eyJhbGciOiJIUzUxMiJ9.eyJsb2dpbl91c2VyX2tleSI6IjUxZGI1YjliLTY5ZjYtNDM1MC05NjMyLTQ3YTlhYjZlNjgwNyJ9.unH89V_qtGv48YggoY4lhIa7UDs2b5h6C5HUbiZGiGk3VQnoQA_i7Jb-Wy91pKuXgGJtxIbycjfuUYxl9cXjug");
 
                     HttpResponseMessage responseMessage = await httpClient.SendAsync(requestMessage);
+                    string resultStr = await responseMessage.Content.ReadAsStringAsync();
 
-                    UploadResult result = JsonSerializer.Deserialize<UploadResult>(responseMessage.Content.ReadAsStringAsync().Result)
+                    UploadResult result = JsonSerializer.Deserialize<UploadResult>(resultStr)
                         ?? new UploadResult() { Msg = string.Empty, Code = 404 };
 
                     if(result.Code == 200) 
                     {
                         // File.Delete(fileInfo.FullName);
+                        Console.WriteLine(resultStr);
                         Console.WriteLine($"{fileInfo.Name} 上传成功");
                     }
                 });

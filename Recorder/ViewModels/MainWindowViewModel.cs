@@ -20,8 +20,6 @@ namespace Recorder.ViewModels
 
         private readonly Chromium chromium;
 
-        private readonly Uploader uploader;
-
         private readonly IClassicDesktopStyleApplicationLifetime applicationLifetime;
 
         /// <summary>
@@ -42,6 +40,8 @@ namespace Recorder.ViewModels
 
         public ICommand ScreenshotCommand { get; set; }
 
+        public ICommand UploadCommand { get; set; }
+
         public ICommand ExitCommand { get; set; }
 
         public MainWindowViewModel()
@@ -54,7 +54,8 @@ namespace Recorder.ViewModels
 
             ffmpeg = new FFmpeg(savePath);
             chromium = new Chromium(savePath);
-            uploader = new Uploader(savePath);
+
+            Uploader uploader = new Uploader(savePath);
             uploader.UploadProgressChanged += (totalBytes, bytesTransferred) =>
             {
                 UploadProgress = (double)bytesTransferred / (double)totalBytes * 100;
@@ -68,6 +69,7 @@ namespace Recorder.ViewModels
             SwitchRecordingCommand = ReactiveCommand.Create(SwitchRecording);
             OpenBrowserCommand = ReactiveCommand.Create(OpenBrowser);
             ScreenshotCommand = ReactiveCommand.Create(Screenshot);
+            UploadCommand = ReactiveCommand.Create(uploader.Upload);
             ExitCommand = ReactiveCommand.Create(Exit);
         }
 
@@ -76,7 +78,6 @@ namespace Recorder.ViewModels
             if (ffmpeg.IsRecording)
             {
                 ffmpeg.StopRecord();
-                uploader.Upload();
             }
             else
             {
@@ -89,7 +90,6 @@ namespace Recorder.ViewModels
         private void OpenBrowser()
         {
             chromium.LauncherPuppeteer();
-            //chromium.Open();
         }
 
         private void Screenshot()
