@@ -28,6 +28,8 @@ namespace Recorder.ViewModels
 
         public string RecordText => ffmpeg.IsRecording ? "结束录制" : "开始录制";
 
+        public bool CanUpload => !ffmpeg.IsRecording;
+
         public double UploadProgress { get; set; }
 
         /// <summary>
@@ -84,6 +86,7 @@ namespace Recorder.ViewModels
                 ffmpeg.StartRecord();
             }
 
+            this.RaisePropertyChanged(nameof(CanUpload));
             this.RaisePropertyChanged(nameof(RecordText));
         }
 

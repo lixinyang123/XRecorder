@@ -29,7 +29,7 @@
 
 			<Button Content="{Binding RecordText}" Command="{Binding SwitchRecordingCommand}" Margin="5" />
 
-			<Button Content="上传" Command="{Binding UploadCommand}" Margin="5" />
+			<Button Content="上传" IsEnabled="{Binding CanUpload}" Command="{Binding UploadCommand}" Margin="5" />
 
 			<Button Content="退出" Command="{Binding ExitCommand}" Grid.Column="3" Margin="5" />
 		</StackPanel>

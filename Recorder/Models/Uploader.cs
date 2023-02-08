@@ -121,7 +121,7 @@ namespace Recorder.Models
 
                     if(result.Code == 200) 
                     {
-                        // File.Delete(fileInfo.FullName);
+                        File.Delete(fileInfo.FullName);
                         Console.WriteLine(resultStr);
                         Console.WriteLine($"{fileInfo.Name} 上传成功");
                     }
