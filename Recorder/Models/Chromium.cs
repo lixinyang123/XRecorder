@@ -75,10 +75,7 @@ namespace Recorder.Models
                 IPage[] pages = await (browser?.PagesAsync() ?? throw new NullReferenceException());
                 pages.ToList().ForEach(async page =>
                 {
-                    await page.ScreenshotAsync(
-                        Path.Combine(savePath, Guid.NewGuid().ToString() + ".png"),
-                        new ScreenshotOptions() { FullPage = true }
-                    );
+                    await page.ScreenshotAsync(Path.Combine(savePath, Guid.NewGuid().ToString() + ".png"));
                 });
             }
             catch (Exception ex)
