@@ -32,7 +32,7 @@ namespace Recorder.ViewModels
         /// Binding Commands
         /// </summary>
 
-        public ICommand SwitchCaptureCommand { get; set; }
+        public ICommand SwitchRecordingCommand { get; set; }
 
         public ICommand OpenBrowserCommand { get; set; }
 
@@ -54,13 +54,13 @@ namespace Recorder.ViewModels
             applicationLifetime = Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime
                 ?? throw new NullReferenceException();
 
-            SwitchCaptureCommand = ReactiveCommand.Create(SwitchCapture);
+            SwitchRecordingCommand = ReactiveCommand.Create(SwitchRecording);
             OpenBrowserCommand = ReactiveCommand.Create(OpenBrowser);
             ScreenshotCommand = ReactiveCommand.Create(Screenshot);
             ExitCommand = ReactiveCommand.Create(Exit);
         }
 
-        private void SwitchCapture()
+        private void SwitchRecording()
         {
             if (ffmpeg.IsRecording)
             {
