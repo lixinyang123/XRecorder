@@ -1,4 +1,5 @@
 using Avalonia.Controls.ApplicationLifetimes;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,7 +13,7 @@ namespace Recorder.Models
 {
     public class Uploader
     {
-        private readonly IClassicDesktopStyleApplicationLifetime applicationLifetime;
+        private readonly AppDataContext appDataContext;
 
         private readonly string savePath = string.Empty;
 
@@ -22,15 +23,12 @@ namespace Recorder.Models
 
         public Uploader(string savePath)
         {
+            appDataContext = App.Current?.DataContext as AppDataContext ?? throw new NullReferenceException();
             this.savePath = savePath;
-
-            applicationLifetime = App.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime
-                ?? throw new NullReferenceException();
-
             fileUploadProgress = new();
         }
 
-        private MultipartFormDataContent GenFormContent(FileInfo fileInfo)
+        private static MultipartFormDataContent GenFormContent(FileInfo fileInfo)
         {
             MultipartFormDataContent httpContent = new()
             {
@@ -77,22 +75,17 @@ namespace Recorder.Models
 
         public void Upload()
         {
-            // Check the upload url is not null or empty.
-            string uploadUrl = applicationLifetime.Args?.FirstOrDefault() ?? "http://shinetechzz.tpddns.cn:31714/proof/webSaveProof";
-            if (string.IsNullOrEmpty(uploadUrl))
-                return;
-
             // Upload files
             Directory.GetFiles(savePath).ToList().ForEach(file =>
             {
                 _ = Task.Run(async () =>
                 {
                     FileInfo fileInfo = new(file);
-                    MultipartFormDataContent content = GenFormContent(fileInfo);
+                    using MultipartFormDataContent content = GenFormContent(fileInfo);
 
                     // init the upload progress
-                    HttpMessageHandler httpMessageHandler = new SocketsHttpHandler();
-                    ProgressMessageHandler progressMessageHandler = new(httpMessageHandler);
+                    using HttpMessageHandler httpMessageHandler = new SocketsHttpHandler();
+                    using ProgressMessageHandler progressMessageHandler = new(httpMessageHandler);
                     progressMessageHandler.HttpSendProgress += (object? sender, HttpProgressEventArgs args) =>
                     {
                         fileUploadProgress.Remove(fileInfo.Name);
@@ -102,17 +95,17 @@ namespace Recorder.Models
                     };
 
                     // Send the request
-                    HttpRequestMessage requestMessage = new()
+                    using HttpRequestMessage requestMessage = new()
                     {
-                        RequestUri = new Uri(uploadUrl),
+                        RequestUri = new Uri(appDataContext.UploadUrl),
                         Method = HttpMethod.Post,
                         Content = content
                     };
 
-                    HttpClient httpClient = new(progressMessageHandler);
-                    httpClient.DefaultRequestHeaders.Add("Authorization", "eyJhbGciOiJIUzUxMiJ9.eyJsb2dpbl91c2VyX2tleSI6IjUxZGI1YjliLTY5ZjYtNDM1MC05NjMyLTQ3YTlhYjZlNjgwNyJ9.unH89V_qtGv48YggoY4lhIa7UDs2b5h6C5HUbiZGiGk3VQnoQA_i7Jb-Wy91pKuXgGJtxIbycjfuUYxl9cXjug");
+                    using HttpClient httpClient = new(progressMessageHandler);
+                    httpClient.DefaultRequestHeaders.Add("Authorization", appDataContext.ApiToken);
 
-                    HttpResponseMessage responseMessage = await httpClient.SendAsync(requestMessage);
+                    using HttpResponseMessage responseMessage = await httpClient.SendAsync(requestMessage);
                     string resultStr = await responseMessage.Content.ReadAsStringAsync();
 
                     // Parse response result
@@ -121,7 +114,6 @@ namespace Recorder.Models
 
                     if (result.Code == 200)
                     {
-                        File.Delete(fileInfo.FullName);
                         Console.WriteLine(resultStr);
                         Console.WriteLine($"{fileInfo.Name} 上传成功");
                     }

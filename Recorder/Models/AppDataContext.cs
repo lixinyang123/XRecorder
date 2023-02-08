@@ -1,30 +1,63 @@
+using Avalonia.Controls.ApplicationLifetimes;
 using ReactiveUI;
 using System;
 using System.IO;
+using System.Linq;
 
 namespace Recorder.Models
 {
     public class AppDataContext : ReactiveObject
     {
-        public readonly string appPath = string.Empty;
+        private IClassicDesktopStyleApplicationLifetime applicationLifetime;
 
-        public readonly string captureResources = string.Empty;
+        public string AppPath { get; private set; } = string.Empty;
+
+        public string CaptureResources { get; private set; } = string.Empty;
+
+        public string UploadUrl { get; private set; } = string.Empty;
+
+        public string ApiToken { get; private set; } = string.Empty;
 
         public AppDataContext()
         {
+            applicationLifetime = App.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime
+                ?? throw new NullReferenceException();
+
+            GenResourcePath();
+            ParseArgs();
+        }
+
+        private void GenResourcePath()
+        {
             // Get assembly path
-            string hostName = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            string hostName = Environment.ProcessPath ?? throw new NullReferenceException();
 
             if (OperatingSystem.IsWindows())
             {
-                appPath = hostName.Substring(0, hostName.LastIndexOf("\\"));
+                AppPath = hostName[..hostName.LastIndexOf("\\")];
             }
             else
             {
-                appPath = hostName.Substring(0, hostName.LastIndexOf("/"));
+                AppPath = hostName[..hostName.LastIndexOf("/")];
             }
 
-            captureResources = Path.Combine(appPath, "CaptureResources");
+            CaptureResources = Path.Combine(AppPath, "CaptureResources");
+        }
+
+        private void ParseArgs()
+        {
+            // Check the upload url is not null or empty.
+            string paraStr = applicationLifetime.Args?.FirstOrDefault() ?? string.Empty;
+            string[] args = paraStr.ToLower().Replace("recorder://", string.Empty).Split("&");
+
+            if (args.Length < 2)
+                return;
+
+            UploadUrl = args[0];
+            ApiToken = args[1];
+
+            if (string.IsNullOrEmpty(UploadUrl) || string.IsNullOrEmpty(ApiToken))
+                applicationLifetime.Shutdown();
         }
     }
 }

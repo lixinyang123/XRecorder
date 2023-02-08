@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Recorder": {
+      "commandName": "Project",
+      "commandLineArgs": "recorder://http://shinetechzz.tpddns.cn:31714/proof/webSaveProof&eyJhbGciOiJIUzUxMiJ9.eyJsb2dpbl91c2VyX2tleSI6IjUxZGI1YjliLTY5ZjYtNDM1MC05NjMyLTQ3YTlhYjZlNjgwNyJ9.unH89V_qtGv48YggoY4lhIa7UDs2b5h6C5HUbiZGiGk3VQnoQA_i7Jb-Wy91pKuXgGJtxIbycjfuUYxl9cXjug"
+    }
+  }
+}

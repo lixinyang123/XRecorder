@@ -49,7 +49,7 @@ namespace Recorder.ViewModels
         public MainWindowViewModel()
         {
             appDataContext = App.Current?.DataContext as AppDataContext ?? throw new NullReferenceException();
-            string savePath = Path.Combine(appDataContext.captureResources, Guid.NewGuid().ToString());
+            string savePath = Path.Combine(appDataContext.CaptureResources, Guid.NewGuid().ToString());
 
             if (!Directory.Exists(savePath))
                 Directory.CreateDirectory(savePath);
