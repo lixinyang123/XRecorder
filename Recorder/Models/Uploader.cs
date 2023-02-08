@@ -79,11 +79,9 @@ namespace Recorder.Models
                 _ = Task.Run(async () =>
                 {
                     FileInfo fileInfo = new(file);
-                    using MultipartFormDataContent content = GenFormContent(fileInfo);
 
                     // init the upload progress
-                    using HttpMessageHandler httpMessageHandler = new SocketsHttpHandler();
-                    using ProgressMessageHandler progressMessageHandler = new(httpMessageHandler);
+                    using ProgressMessageHandler progressMessageHandler = new(new SocketsHttpHandler());
                     progressMessageHandler.HttpSendProgress += (object? sender, HttpProgressEventArgs args) =>
                     {
                         fileUploadProgress.Remove(fileInfo.Name);
@@ -97,7 +95,7 @@ namespace Recorder.Models
                     {
                         RequestUri = new Uri(appDataContext.UploadUrl),
                         Method = HttpMethod.Post,
-                        Content = content
+                        Content = GenFormContent(fileInfo)
                     };
 
                     using HttpClient httpClient = new(progressMessageHandler);
@@ -112,6 +110,7 @@ namespace Recorder.Models
 
                     if (result.Code == 200)
                     {
+                        File.Delete(fileInfo.FullName);
                         Console.WriteLine(resultStr);
                         Console.WriteLine($"{fileInfo.Name} 上传成功");
                     }
