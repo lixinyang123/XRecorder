@@ -1,8 +1,8 @@
 ﻿using PuppeteerSharp;
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 
 namespace Recorder.Models
 {
@@ -61,6 +61,7 @@ namespace Recorder.Models
             browser.TargetChanged += (object? sender, TargetChangedArgs e) =>
             {
                 // Get the target IP
+                IPAddress[] addressList = Dns.GetHostEntry(new Uri(e.Target.Url).Host).AddressList;
             };
 
             IPage page = await browser.NewPageAsync();
@@ -74,21 +75,16 @@ namespace Recorder.Models
                 IPage[] pages = await (browser?.PagesAsync() ?? throw new NullReferenceException());
                 pages.ToList().ForEach(async page =>
                 {
-                    await page.ScreenshotAsync(Path.Combine(savePath, Guid.NewGuid().ToString() + ".png"));
+                    await page.ScreenshotAsync(
+                        Path.Combine(savePath, Guid.NewGuid().ToString() + ".png"),
+                        new ScreenshotOptions() { FullPage = true }
+                    );
                 });
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
-        }
-
-        public void Open()
-        {
-            Process.Start(new ProcessStartInfo(chromiumPath, "baidu.com")
-            {
-                CreateNoWindow = true
-            });
         }
 
         public async void Close()
