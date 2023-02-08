@@ -20,6 +20,8 @@ namespace Recorder.ViewModels
 
         private readonly Chromium chromium;
 
+        private readonly Uploader uploader;
+
         private readonly IClassicDesktopStyleApplicationLifetime applicationLifetime;
 
         /// <summary>
@@ -27,6 +29,8 @@ namespace Recorder.ViewModels
         /// </summary>
 
         public string RecordText => ffmpeg.IsRecording ? "结束录制" : "开始录制";
+
+        public double UploadProgress { get; set; }
 
         /// <summary>
         /// Binding Commands
@@ -50,9 +54,16 @@ namespace Recorder.ViewModels
 
             ffmpeg = new FFmpeg(savePath);
             chromium = new Chromium(savePath);
+            uploader = new Uploader(savePath);
+            uploader.UploadProgressChanged += (totalBytes, bytesTransferred) =>
+            {
+                UploadProgress = (double)bytesTransferred / (double)totalBytes * 100;
+                this.RaisePropertyChanged(nameof(UploadProgress));
+            };
 
             applicationLifetime = Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime
                 ?? throw new NullReferenceException();
+            applicationLifetime.Exit += (o, e) => { Directory.Delete(savePath, true); };
 
             SwitchRecordingCommand = ReactiveCommand.Create(SwitchRecording);
             OpenBrowserCommand = ReactiveCommand.Create(OpenBrowser);
@@ -65,6 +76,7 @@ namespace Recorder.ViewModels
             if (ffmpeg.IsRecording)
             {
                 ffmpeg.StopRecord();
+                uploader.Upload();
             }
             else
             {
