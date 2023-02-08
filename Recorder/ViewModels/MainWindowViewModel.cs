@@ -15,7 +15,7 @@ namespace Recorder.ViewModels
         /// </summary>
 
         private readonly AppDataContext appDataContext;
-        
+
         private readonly FFmpeg ffmpeg;
 
         private readonly Chromium chromium;
@@ -102,7 +102,7 @@ namespace Recorder.ViewModels
 
         private void Exit()
         {
-            if(chromium.IsRunning)
+            if (chromium.IsRunning)
             {
                 chromium.Close();
             }

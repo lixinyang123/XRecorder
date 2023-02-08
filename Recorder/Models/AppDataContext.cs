@@ -23,7 +23,7 @@ namespace Recorder.Models
             {
                 appPath = hostName.Substring(0, hostName.LastIndexOf("/"));
             }
-            
+
             captureResources = Path.Combine(appPath, "CaptureResources");
         }
     }

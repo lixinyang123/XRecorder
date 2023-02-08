@@ -1,7 +1,7 @@
-﻿using System.Diagnostics;
+﻿using PuppeteerSharp;
 using System;
+using System.Diagnostics;
 using System.IO;
-using PuppeteerSharp;
 using System.Linq;
 
 namespace Recorder.Models
@@ -46,8 +46,8 @@ namespace Recorder.Models
             if (browser is not null)
                 return;
 
-            browser = await Puppeteer.LaunchAsync(new LaunchOptions 
-            { 
+            browser = await Puppeteer.LaunchAsync(new LaunchOptions
+            {
                 Headless = false,
                 ExecutablePath = chromiumPath,
                 DefaultViewport = null
@@ -58,7 +58,7 @@ namespace Recorder.Models
                 browser = null;
             };
 
-            browser.TargetChanged += (object? sender, TargetChangedArgs e) => 
+            browser.TargetChanged += (object? sender, TargetChangedArgs e) =>
             {
                 // Get the target IP
             };
@@ -93,9 +93,9 @@ namespace Recorder.Models
 
         public async void Close()
         {
-            if(browser is null)
+            if (browser is null)
                 return;
-            
+
             await (browser?.CloseAsync() ?? throw new NullReferenceException());
             browser?.Dispose();
         }

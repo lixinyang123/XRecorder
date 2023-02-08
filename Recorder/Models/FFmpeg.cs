@@ -1,5 +1,4 @@
-﻿using Avalonia.Media;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
 
@@ -27,7 +26,7 @@ namespace Recorder.Models
 
         public void StartRecord()
         {
-            if(IsRecording)
+            if (IsRecording)
                 return;
 
             try
@@ -67,9 +66,9 @@ namespace Recorder.Models
 
         public void StopRecord()
         {
-            if(!IsRecording)
+            if (!IsRecording)
                 return;
-            
+
             ffProcess?.StandardInput.Write('q');
             ffProcess?.WaitForExit();
             ffProcess?.Dispose();

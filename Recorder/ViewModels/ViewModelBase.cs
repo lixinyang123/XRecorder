@@ -2,5 +2,5 @@ using ReactiveUI;
 
 namespace Recorder.ViewModels
 {
-    public class ViewModelBase : ReactiveObject {}
+    public class ViewModelBase : ReactiveObject { }
 }
