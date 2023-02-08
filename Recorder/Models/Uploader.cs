@@ -17,6 +17,8 @@ namespace Recorder.Models
 
         private readonly Dictionary<string, HttpProgressEventArgs> fileUploadProgress;
 
+        private static readonly object locker = new();
+
         public event Action<long, long>? UploadProgressChanged;
 
         public Uploader(string savePath)
@@ -84,10 +86,13 @@ namespace Recorder.Models
                     using ProgressMessageHandler progressMessageHandler = new(new SocketsHttpHandler());
                     progressMessageHandler.HttpSendProgress += (object? sender, HttpProgressEventArgs args) =>
                     {
-                        fileUploadProgress.Remove(fileInfo.Name);
-                        fileUploadProgress.Add(fileInfo.Name, args);
+                        lock (locker)
+                        {
+                            fileUploadProgress.Remove(fileInfo.Name);
+                            fileUploadProgress.Add(fileInfo.Name, args);
 
-                        NotifyProgressChanged();
+                            NotifyProgressChanged();
+                        }
                     };
 
                     // Send the request
