@@ -3,6 +3,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using ReactiveUI;
 using Recorder.Models;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Input;
@@ -27,6 +28,8 @@ namespace Recorder.ViewModels
 
         private readonly string savePath;
 
+        private int uploaded = 0;
+
         /// <summary>
         /// Binding Properties
         /// </summary>
@@ -34,6 +37,8 @@ namespace Recorder.ViewModels
         public string RecordText => ffmpeg.IsRecording ? "结束录制" : "开始录制";
 
         public bool CanUpload => !ffmpeg.IsRecording;
+
+        public string AlertText { get; private set; } = "0个文件已上传";
 
         /// <summary>
         /// Binding Commands
@@ -44,8 +49,6 @@ namespace Recorder.ViewModels
         public ICommand OpenBrowserCommand { get; set; }
 
         public ICommand ScreenshotCommand { get; set; }
-
-        public ICommand UploadCommand { get; set; }
 
         public ICommand ExitCommand { get; set; }
 
@@ -68,11 +71,10 @@ namespace Recorder.ViewModels
             SwitchRecordingCommand = ReactiveCommand.Create(SwitchRecording);
             OpenBrowserCommand = ReactiveCommand.Create(OpenBrowser);
             ScreenshotCommand = ReactiveCommand.Create(Screenshot);
-            UploadCommand = ReactiveCommand.Create(Upload);
             ExitCommand = ReactiveCommand.Create(Exit);
         }
 
-        private void Initialize(string savePath)
+        private static void Initialize(string savePath)
         {
             // 初始化资源目录
             if (!Directory.Exists(savePath))
@@ -87,6 +89,7 @@ namespace Recorder.ViewModels
             if (ffmpeg.IsRecording)
             {
                 ffmpeg.StopRecord();
+                Upload();
             }
             else
             {
@@ -105,14 +108,22 @@ namespace Recorder.ViewModels
         private void Screenshot()
         {
             chromium.ScreenShot();
+            Upload();
         }
 
         private void Upload()
         {
             // Upload files
-            Directory.GetFiles(savePath).ToList().ForEach(file =>
+            List<string> files = Directory.GetFiles(savePath).ToList();
+
+            files.ForEach(async file =>
             {
-                uploader.Upload(file);
+                if(await uploader.Upload(file))
+                {
+                    AlertText = $"{++uploaded}个文件已上传";
+                }
+
+                this.RaisePropertyChanged(nameof(AlertText));
             });
         }
 

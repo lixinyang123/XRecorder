@@ -51,13 +51,13 @@ namespace Recorder.Models
             return httpContent;
         }
 
-        public void Upload(string file)
+        public async Task<bool> Upload(string file)
         {
-            Task.Run(async () =>
+            return await Task.Run(async () =>
             {
                 FileInfo fileInfo = new(file);
 
-                // Send the request
+                // 发送请求
                 using HttpRequestMessage requestMessage = new()
                 {
                     RequestUri = new Uri(appDataContext.UploadUrl),
@@ -71,14 +71,15 @@ namespace Recorder.Models
                 using HttpResponseMessage responseMessage = await httpClient.SendAsync(requestMessage);
                 string resultStr = await responseMessage.Content.ReadAsStringAsync();
 
-                // Parse response result
+                // 解析上传结果
                 UploadResult result = JsonSerializer.Deserialize<UploadResult>(resultStr)
                     ?? new UploadResult() { Msg = string.Empty, Code = 404 };
 
                 if (result.Code != 200)
-                    return;
+                    return false;
 
                 File.Delete(fileInfo.FullName);
+                return true;
             });
         }
     }
