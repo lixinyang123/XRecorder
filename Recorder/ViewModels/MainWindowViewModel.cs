@@ -4,6 +4,7 @@ using ReactiveUI;
 using Recorder.Models;
 using System;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Recorder.ViewModels
@@ -84,7 +85,7 @@ namespace Recorder.ViewModels
             };
 
             // 初始化退出事件
-            applicationLifetime.Exit += (o, e) => { Directory.Delete(savePath, true); };
+            //applicationLifetime.Exit += (o, e) => { Directory.Delete(savePath, true); };
         }
 
         private void SwitchRecording()
@@ -114,11 +115,7 @@ namespace Recorder.ViewModels
 
         private void Upload()
         {
-            if (!uploader.Upload()) 
-            {
-                return;
-            }
-
+            Task.WaitAll(uploader.Upload().ToArray());
             Exit();
         }
 

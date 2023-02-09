@@ -33,7 +33,7 @@ namespace Recorder.Models
             MultipartFormDataContent httpContent = new()
             {
                 // 传输代码
-                { new StringContent("1"), appDataContext.TransactionCode},
+                { new StringContent(appDataContext.TransactionCode), "transactionCode"},
                 // 文件格式
                 {
                     new StringContent(fileInfo.Extension switch
@@ -75,9 +75,9 @@ namespace Recorder.Models
             UploadProgressChanged?.Invoke(totalBytes, bytesTransferred);
         }
 
-        public bool Upload()
+        public List<Task> Upload()
         {
-            List<Task<bool>> tasks = new();
+            List<Task> tasks = new();
 
             // Upload files
             Directory.GetFiles(savePath).ToList().ForEach(file =>
@@ -118,16 +118,13 @@ namespace Recorder.Models
                         ?? new UploadResult() { Msg = string.Empty, Code = 404 };
 
                     if (result.Code != 200)
-                        return false;
+                        return;
 
                     File.Delete(fileInfo.FullName);
-                    Console.WriteLine(resultStr);
-                    Console.WriteLine($"{fileInfo.Name} 上传成功");
-                    return true;
                 }));
             });
 
-            return Task.WhenAll<bool>().Result.ToList().Any();
+            return tasks;
         }
     }
 }
