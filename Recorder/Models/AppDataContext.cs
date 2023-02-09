@@ -18,6 +18,8 @@ namespace Recorder.Models
 
         public string ApiToken { get; private set; } = string.Empty;
 
+        public string TransactionCode { get; private set; } = string.Empty;
+
         public AppDataContext()
         {
             applicationLifetime = App.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime
@@ -55,6 +57,7 @@ namespace Recorder.Models
 
             UploadUrl = args[0];
             ApiToken = args[1];
+            TransactionCode = args[2];
         }
     }
 }

@@ -2,7 +2,7 @@
   "profiles": {
     "Recorder": {
       "commandName": "Project",
-      "commandLineArgs": "recorder://https://fasuoback.ks.osvlabs.com:31310/proof/webSaveProof&eyJhbGciOiJIUzUxMiJ9.eyJsb2dpbl91c2VyX2tleSI6IjdkNTIwMjZiLWUxYTgtNGM4Ny05MGExLTAxODk5OTk1YTkyZiJ9.NaC-p38zzoK5TUtYGhSKCNdDkpFaZtAYqYBY9xTcVbUwFojpMSc6kGI3ddRnkbiiPL4I9zJ2vWym5qLwglrywg"
+      "commandLineArgs": "recorder://https://fasuoback.ks.osvlabs.com:31310/proof/webSaveProof&eyJhbGciOiJIUzUxMiJ9.eyJsb2dpbl91c2VyX2tleSI6ImE5YjM5OWY5LTY0MGEtNDViZS1iMDFmLWI4YjBhNGUwNzM5MiJ9.SA3zF3eMtDc-hLmd70RV50ZXfK7AWmptgrVobjCoYlrOBNR35IBKHtorXNF1bDqahxe7khrkXdfXZrXMha6RxA&135-1675932429"
     }
   }
 }

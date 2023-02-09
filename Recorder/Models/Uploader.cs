@@ -28,12 +28,12 @@ namespace Recorder.Models
             fileUploadProgress = new();
         }
 
-        private static MultipartFormDataContent GenFormContent(FileInfo fileInfo)
+        private MultipartFormDataContent GenFormContent(FileInfo fileInfo)
         {
             MultipartFormDataContent httpContent = new()
             {
                 // 传输代码
-                { new StringContent("1"), "transactionCode" },
+                { new StringContent("1"), appDataContext.TransactionCode},
                 // 文件格式
                 {
                     new StringContent(fileInfo.Extension switch

@@ -114,7 +114,12 @@ namespace Recorder.ViewModels
 
         private void Upload()
         {
-            if (!uploader.Upload()) { }
+            if (!uploader.Upload()) 
+            {
+                return;
+            }
+
+            Exit();
         }
 
         private void Exit()
