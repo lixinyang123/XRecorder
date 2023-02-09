@@ -57,11 +57,10 @@ Section "Dummy Section" SecDummy
   
   ;Store installation folder
   SetRegView 64
+  DeleteRegKey HKCR "Recorder"
   WriteRegStr HKCR "Recorder" "" "URL:Recorder"
   WriteRegStr HKCR "Recorder" "URL Protocol" ""
-  WriteRegStr HKCR "Recorder\shell\open\command" "" '"$INSTDIR/Recorder.exe" "--open-url"  "--" "%1"'
-
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Product"  "Recorder" "Recorder"
+  WriteRegStr HKCR "Recorder\shell\open\command" "" '"$INSTDIR/Recorder.exe" "%1"'
 
   ;Create uninstaller
   WriteUninstaller "$INSTDIR\Uninstall.exe"
@@ -88,6 +87,6 @@ Section "Uninstall"
 
   RMDir /r "$INSTDIR"
 
-  DeleteRegKey /ifempty HKCR "Recorder"
+  DeleteRegKey HKCR "Recorder"
 
 SectionEnd
