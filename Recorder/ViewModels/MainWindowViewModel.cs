@@ -4,7 +4,6 @@ using ReactiveUI;
 using Recorder.Models;
 using System;
 using System.IO;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Recorder.ViewModels
@@ -106,7 +105,7 @@ namespace Recorder.ViewModels
 
         private void Upload()
         {
-            Task.WaitAll(uploader.Upload().ToArray());
+            uploader.Upload();
         }
 
         private void Exit()

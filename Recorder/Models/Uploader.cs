@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -53,14 +52,12 @@ namespace Recorder.Models
             return httpContent;
         }
 
-        public List<Task> Upload()
+        public void Upload()
         {
-            List<Task> tasks = new();
-
             // Upload files
             Directory.GetFiles(savePath).ToList().ForEach(file =>
             {
-                tasks.Add(Task.Run(async () =>
+                Task.Run(async () =>
                 {
                     FileInfo fileInfo = new(file);
 
@@ -86,10 +83,8 @@ namespace Recorder.Models
                         return;
 
                     File.Delete(fileInfo.FullName);
-                }));
+                });
             });
-
-            return tasks;
         }
     }
 }
