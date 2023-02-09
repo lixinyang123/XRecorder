@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Handlers;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -15,17 +14,10 @@ namespace Recorder.Models
 
         private readonly string savePath = string.Empty;
 
-        private readonly Dictionary<string, HttpProgressEventArgs> fileUploadProgress;
-
-        private static readonly object locker = new();
-
-        public event Action<long, long>? UploadProgressChanged;
-
         public Uploader(string savePath)
         {
             appDataContext = App.Current?.DataContext as AppDataContext ?? throw new NullReferenceException();
             this.savePath = savePath;
-            fileUploadProgress = new();
         }
 
         private MultipartFormDataContent GenFormContent(FileInfo fileInfo)
@@ -38,7 +30,7 @@ namespace Recorder.Models
                 {
                     new StringContent(fileInfo.Extension switch
                     {
-                        ".jpg" => "1",
+                        ".png" => "1",
                         ".mp4" => "4",
                         _ => "0"
                     }),
@@ -61,20 +53,6 @@ namespace Recorder.Models
             return httpContent;
         }
 
-        private void NotifyProgressChanged()
-        {
-            long totalBytes = 0;
-            long bytesTransferred = 0;
-
-            fileUploadProgress.Values.ToList().ForEach(progress =>
-            {
-                bytesTransferred += progress.BytesTransferred;
-                totalBytes += progress.TotalBytes ?? 0;
-            });
-
-            UploadProgressChanged?.Invoke(totalBytes, bytesTransferred);
-        }
-
         public List<Task> Upload()
         {
             List<Task> tasks = new();
@@ -86,19 +64,6 @@ namespace Recorder.Models
                 {
                     FileInfo fileInfo = new(file);
 
-                    // init the upload progress
-                    using ProgressMessageHandler progressMessageHandler = new(new SocketsHttpHandler());
-                    progressMessageHandler.HttpSendProgress += (object? sender, HttpProgressEventArgs args) =>
-                    {
-                        lock (locker)
-                        {
-                            fileUploadProgress.Remove(fileInfo.Name);
-                            fileUploadProgress.Add(fileInfo.Name, args);
-
-                            NotifyProgressChanged();
-                        }
-                    };
-
                     // Send the request
                     using HttpRequestMessage requestMessage = new()
                     {
@@ -107,7 +72,7 @@ namespace Recorder.Models
                         Content = GenFormContent(fileInfo)
                     };
 
-                    using HttpClient httpClient = new(progressMessageHandler);
+                    using HttpClient httpClient = new();
                     httpClient.DefaultRequestHeaders.Add("Authorization", appDataContext.ApiToken);
 
                     using HttpResponseMessage responseMessage = await httpClient.SendAsync(requestMessage);

@@ -3,14 +3,14 @@
         xmlns:vm="using:Recorder.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="375" d:DesignHeight="60"
+        mc:Ignorable="d" d:DesignWidth="375" d:DesignHeight="50"
         x:Class="Recorder.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
         Title="Recorder"
 		ExtendClientAreaToDecorationsHint="True"
 		ExtendClientAreaChromeHints="NoChrome"
 		ExtendClientAreaTitleBarHeightHint="0"
-		Height="60"
+		Height="50"
 		Width="375"
 		CanResize="False"
 		Topmost="True"
@@ -21,20 +21,16 @@
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
-	<StackPanel>
-		<StackPanel Orientation="Horizontal">
-			<Button Content="启动浏览器" Command="{Binding OpenBrowserCommand}" Margin="5" />
+	<StackPanel Orientation="Horizontal">
+		<Button Content="启动浏览器" Command="{Binding OpenBrowserCommand}" Margin="5" />
 
-			<Button Content="网页截图" Command="{Binding ScreenshotCommand}" Margin="5" />
+		<Button Content="网页截图" Command="{Binding ScreenshotCommand}" Margin="5" />
 
-			<Button Content="{Binding RecordText}" Command="{Binding SwitchRecordingCommand}" Margin="5" />
+		<Button Content="{Binding RecordText}" Command="{Binding SwitchRecordingCommand}" Margin="5" />
 
-			<Button Content="上传" IsEnabled="{Binding CanUpload}" Command="{Binding UploadCommand}" Margin="5" />
+		<Button Content="上传" IsEnabled="{Binding CanUpload}" Command="{Binding UploadCommand}" Margin="5" />
 
-			<Button Content="退出" Command="{Binding ExitCommand}" Grid.Column="3" Margin="5" />
-		</StackPanel>
-
-		<ProgressBar ShowProgressText="true" Value="{Binding UploadProgress}" />
+		<Button Content="退出" Command="{Binding ExitCommand}" Grid.Column="3" Margin="5" />
 	</StackPanel>
 	
 </Window>

@@ -33,8 +33,6 @@ namespace Recorder.ViewModels
 
         public bool CanUpload => !ffmpeg.IsRecording;
 
-        public double UploadProgress { get; set; }
-
         /// <summary>
         /// Binding Commands
         /// </summary>
@@ -76,13 +74,6 @@ namespace Recorder.ViewModels
             // 初始化资源目录
             if (!Directory.Exists(savePath))
                 Directory.CreateDirectory(savePath);
-
-            // 初始化上传进度
-            uploader.UploadProgressChanged += (totalBytes, bytesTransferred) =>
-            {
-                UploadProgress = (double)bytesTransferred / (double)totalBytes * 100;
-                this.RaisePropertyChanged(nameof(UploadProgress));
-            };
 
             // 初始化退出事件
             //applicationLifetime.Exit += (o, e) => { Directory.Delete(savePath, true); };
