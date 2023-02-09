@@ -30,7 +30,7 @@ namespace Recorder.Models
         private void GenResourcePath()
         {
             // Get assembly path
-            string hostName = Environment.ProcessPath ?? throw new NullReferenceException();
+            string hostName = System.Reflection.Assembly.GetExecutingAssembly().Location;
 
             if (OperatingSystem.IsWindows())
             {
@@ -50,14 +50,8 @@ namespace Recorder.Models
             string paraStr = applicationLifetime.Args?.FirstOrDefault() ?? string.Empty;
             string[] args = paraStr.ToLower().Replace("recorder://", string.Empty).Split("&");
 
-            if (args.Length < 2)
-                return;
-
             UploadUrl = args[0];
             ApiToken = args[1];
-
-            if (string.IsNullOrEmpty(UploadUrl) || string.IsNullOrEmpty(ApiToken))
-                applicationLifetime.Shutdown();
         }
     }
 }
