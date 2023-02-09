@@ -16,6 +16,8 @@ namespace Recorder.Models
 
         private IBrowser? browser;
 
+        private IPage? currentPage;
+
         public bool IsRunning => !browser?.IsClosed ?? false;
 
         public Chromium(string savePath)
@@ -58,30 +60,21 @@ namespace Recorder.Models
                 browser = null;
             };
 
-            browser.TargetChanged += (object? sender, TargetChangedArgs e) =>
+            browser.TargetChanged += async (object? sender, TargetChangedArgs e) =>
             {
+                currentPage = await e.Target.PageAsync();
+
                 // Get the target IP
-                IPAddress[] addressList = Dns.GetHostEntry(new Uri(e.Target.Url).Host).AddressList;
+                //IPAddress[] addressList = Dns.GetHostEntry(new Uri(e.Target.Url).Host).AddressList;
             };
 
             IPage page = await browser.NewPageAsync();
             _ = page.GoToAsync("https://www.baidu.com");
         }
 
-        public async void ScreenShot()
+        public void ScreenShot()
         {
-            try
-            {
-                IPage[] pages = await (browser?.PagesAsync() ?? throw new NullReferenceException());
-                pages.ToList().ForEach(async page =>
-                {
-                    await page.ScreenshotAsync(Path.Combine(savePath, Guid.NewGuid().ToString() + ".png"));
-                });
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+            currentPage?.ScreenshotAsync(Path.Combine(savePath, Guid.NewGuid().ToString() + ".png"));
         }
 
         public async void Close()
