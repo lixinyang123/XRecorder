@@ -48,7 +48,10 @@ namespace Recorder.Models
         {
             // Check the upload url is not null or empty.
             string paraStr = applicationLifetime.Args?.FirstOrDefault() ?? string.Empty;
-            string[] args = paraStr.ToLower().Replace("recorder://", string.Empty).Split("&");
+            string[] args = paraStr
+                .Replace("recorder://", string.Empty)
+                .Replace("Recorder://", string.Empty)
+                .Split("&");
 
             UploadUrl = args[0];
             ApiToken = args[1];

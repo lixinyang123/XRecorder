@@ -20,6 +20,8 @@ namespace Recorder.ViewModels
 
         private readonly Chromium chromium;
 
+        private readonly Uploader uploader;
+
         private readonly IClassicDesktopStyleApplicationLifetime applicationLifetime;
 
         /// <summary>
@@ -49,30 +51,39 @@ namespace Recorder.ViewModels
         public MainWindowViewModel()
         {
             appDataContext = App.Current?.DataContext as AppDataContext ?? throw new NullReferenceException();
-            string savePath = Path.Combine(appDataContext.CaptureResources, Guid.NewGuid().ToString());
 
-            if (!Directory.Exists(savePath))
-                Directory.CreateDirectory(savePath);
+            applicationLifetime = Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime
+                ?? throw new NullReferenceException();
+
+            string savePath = Path.Combine(appDataContext.CaptureResources, Guid.NewGuid().ToString());
 
             ffmpeg = new FFmpeg(savePath);
             chromium = new Chromium(savePath);
+            uploader = new(savePath);
+            Initialize(savePath);
 
-            Uploader uploader = new Uploader(savePath);
+            SwitchRecordingCommand = ReactiveCommand.Create(SwitchRecording);
+            OpenBrowserCommand = ReactiveCommand.Create(OpenBrowser);
+            ScreenshotCommand = ReactiveCommand.Create(Screenshot);
+            UploadCommand = ReactiveCommand.Create(Upload);
+            ExitCommand = ReactiveCommand.Create(Exit);
+        }
+
+        private void Initialize(string savePath)
+        {
+            // 初始化资源目录
+            if (!Directory.Exists(savePath))
+                Directory.CreateDirectory(savePath);
+
+            // 初始化上传进度
             uploader.UploadProgressChanged += (totalBytes, bytesTransferred) =>
             {
                 UploadProgress = (double)bytesTransferred / (double)totalBytes * 100;
                 this.RaisePropertyChanged(nameof(UploadProgress));
             };
 
-            applicationLifetime = Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime
-                ?? throw new NullReferenceException();
+            // 初始化退出事件
             applicationLifetime.Exit += (o, e) => { Directory.Delete(savePath, true); };
-
-            SwitchRecordingCommand = ReactiveCommand.Create(SwitchRecording);
-            OpenBrowserCommand = ReactiveCommand.Create(OpenBrowser);
-            ScreenshotCommand = ReactiveCommand.Create(Screenshot);
-            UploadCommand = ReactiveCommand.Create(uploader.Upload);
-            ExitCommand = ReactiveCommand.Create(Exit);
         }
 
         private void SwitchRecording()
@@ -98,6 +109,11 @@ namespace Recorder.ViewModels
         private void Screenshot()
         {
             chromium.ScreenShot();
+        }
+
+        private void Upload()
+        {
+            if (!uploader.Upload()) { }
         }
 
         private void Exit()

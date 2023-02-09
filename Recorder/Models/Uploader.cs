@@ -44,6 +44,8 @@ namespace Recorder.Models
                     }),
                     "proofType"
                 },
+                // 文件名
+                { new StringContent(fileInfo.Name), "proofName" },
                 // 网页地址
                 { new StringContent(string.Empty), "proofAdress" },
                 // 取证时间
@@ -73,12 +75,14 @@ namespace Recorder.Models
             UploadProgressChanged?.Invoke(totalBytes, bytesTransferred);
         }
 
-        public void Upload()
+        public bool Upload()
         {
+            List<Task<bool>> tasks = new();
+
             // Upload files
             Directory.GetFiles(savePath).ToList().ForEach(file =>
             {
-                _ = Task.Run(async () =>
+                tasks.Add(Task.Run(async () =>
                 {
                     FileInfo fileInfo = new(file);
 
@@ -113,14 +117,17 @@ namespace Recorder.Models
                     UploadResult result = JsonSerializer.Deserialize<UploadResult>(resultStr)
                         ?? new UploadResult() { Msg = string.Empty, Code = 404 };
 
-                    if (result.Code == 200)
-                    {
-                        File.Delete(fileInfo.FullName);
-                        Console.WriteLine(resultStr);
-                        Console.WriteLine($"{fileInfo.Name} 上传成功");
-                    }
-                });
+                    if (result.Code != 200)
+                        return false;
+
+                    File.Delete(fileInfo.FullName);
+                    Console.WriteLine(resultStr);
+                    Console.WriteLine($"{fileInfo.Name} 上传成功");
+                    return true;
+                }));
             });
+
+            return Task.WhenAll<bool>().Result.ToList().Any();
         }
     }
 }
