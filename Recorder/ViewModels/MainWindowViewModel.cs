@@ -55,13 +55,14 @@ namespace Recorder.ViewModels
             applicationLifetime = Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime
                 ?? throw new NullReferenceException();
 
+            // Initialize require services
             string savePath = Path.Combine(appDataContext.CaptureResources, Guid.NewGuid().ToString());
-
             ffmpeg = new FFmpeg(savePath);
             chromium = new Chromium(savePath);
             uploader = new(savePath);
             Initialize(savePath);
 
+            // Bind Command
             SwitchRecordingCommand = ReactiveCommand.Create(SwitchRecording);
             OpenBrowserCommand = ReactiveCommand.Create(OpenBrowser);
             ScreenshotCommand = ReactiveCommand.Create(Screenshot);
