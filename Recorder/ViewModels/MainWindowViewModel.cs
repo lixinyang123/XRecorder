@@ -4,6 +4,7 @@ using ReactiveUI;
 using Recorder.Models;
 using System;
 using System.IO;
+using System.Linq;
 using System.Windows.Input;
 
 namespace Recorder.ViewModels
@@ -23,6 +24,8 @@ namespace Recorder.ViewModels
         private readonly Uploader uploader;
 
         private readonly IClassicDesktopStyleApplicationLifetime applicationLifetime;
+
+        private readonly string savePath;
 
         /// <summary>
         /// Binding Properties
@@ -53,8 +56,9 @@ namespace Recorder.ViewModels
             applicationLifetime = Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime
                 ?? throw new NullReferenceException();
 
+            savePath = Path.Combine(appDataContext.CaptureResources, Guid.NewGuid().ToString());
+
             // Initialize require services
-            string savePath = Path.Combine(appDataContext.CaptureResources, Guid.NewGuid().ToString());
             ffmpeg = new FFmpeg(savePath);
             chromium = new Chromium(savePath);
             uploader = new(savePath);
@@ -105,7 +109,11 @@ namespace Recorder.ViewModels
 
         private void Upload()
         {
-            uploader.Upload();
+            // Upload files
+            Directory.GetFiles(savePath).ToList().ForEach(file =>
+            {
+                uploader.Upload(file);
+            });
         }
 
         private void Exit()

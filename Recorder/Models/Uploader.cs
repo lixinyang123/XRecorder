@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -52,38 +51,34 @@ namespace Recorder.Models
             return httpContent;
         }
 
-        public void Upload()
+        public void Upload(string file)
         {
-            // Upload files
-            Directory.GetFiles(savePath).ToList().ForEach(file =>
+            Task.Run(async () =>
             {
-                Task.Run(async () =>
+                FileInfo fileInfo = new(file);
+
+                // Send the request
+                using HttpRequestMessage requestMessage = new()
                 {
-                    FileInfo fileInfo = new(file);
+                    RequestUri = new Uri(appDataContext.UploadUrl),
+                    Method = HttpMethod.Post,
+                    Content = GenFormContent(fileInfo)
+                };
 
-                    // Send the request
-                    using HttpRequestMessage requestMessage = new()
-                    {
-                        RequestUri = new Uri(appDataContext.UploadUrl),
-                        Method = HttpMethod.Post,
-                        Content = GenFormContent(fileInfo)
-                    };
+                using HttpClient httpClient = new();
+                httpClient.DefaultRequestHeaders.Add("Authorization", appDataContext.ApiToken);
 
-                    using HttpClient httpClient = new();
-                    httpClient.DefaultRequestHeaders.Add("Authorization", appDataContext.ApiToken);
+                using HttpResponseMessage responseMessage = await httpClient.SendAsync(requestMessage);
+                string resultStr = await responseMessage.Content.ReadAsStringAsync();
 
-                    using HttpResponseMessage responseMessage = await httpClient.SendAsync(requestMessage);
-                    string resultStr = await responseMessage.Content.ReadAsStringAsync();
+                // Parse response result
+                UploadResult result = JsonSerializer.Deserialize<UploadResult>(resultStr)
+                    ?? new UploadResult() { Msg = string.Empty, Code = 404 };
 
-                    // Parse response result
-                    UploadResult result = JsonSerializer.Deserialize<UploadResult>(resultStr)
-                        ?? new UploadResult() { Msg = string.Empty, Code = 404 };
+                if (result.Code != 200)
+                    return;
 
-                    if (result.Code != 200)
-                        return;
-
-                    File.Delete(fileInfo.FullName);
-                });
+                File.Delete(fileInfo.FullName);
             });
         }
     }
