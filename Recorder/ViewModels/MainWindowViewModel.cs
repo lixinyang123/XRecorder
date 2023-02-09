@@ -107,7 +107,6 @@ namespace Recorder.ViewModels
         private void Upload()
         {
             Task.WaitAll(uploader.Upload().ToArray());
-            Exit();
         }
 
         private void Exit()
