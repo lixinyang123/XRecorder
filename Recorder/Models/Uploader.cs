@@ -1,3 +1,4 @@
+using Microsoft.Net.Http.Headers;
 using System;
 using System.IO;
 using System.Net.Http;
@@ -97,6 +98,8 @@ namespace Recorder.Models
                 proofCount = uploaded,
                 transactionCode = appDataContext.TransactionCode
             }));
+
+            httpContent.Headers.ContentType = new("application/json");
 
             HttpClient httpClient = new();
             httpClient.DefaultRequestHeaders.Add("Authorization", appDataContext.ApiToken);

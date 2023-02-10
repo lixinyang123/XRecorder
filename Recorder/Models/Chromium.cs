@@ -73,10 +73,14 @@ namespace Recorder.Models
 
         public async Task ScreenShot()
         {
-            if (currentPage is null)
-                return;
+            try
+            {
+                if (currentPage is null)
+                    return;
 
-            await currentPage.ScreenshotAsync(Path.Combine(savePath, Guid.NewGuid().ToString() + ".png"));
+                await currentPage.ScreenshotAsync(Path.Combine(savePath, Guid.NewGuid().ToString() + ".png"));
+            }
+            catch (Exception) { }
         }
 
         public async void Close()
