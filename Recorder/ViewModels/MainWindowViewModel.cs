@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Recorder.ViewModels
@@ -40,7 +41,15 @@ namespace Recorder.ViewModels
 
         public bool CanUpload => !ffmpeg.IsRecording;
 
-        public string AlertText { get; private set; } = "0/0 已上传";
+        public string UploadText
+        {
+            get => $"{uploadedCount}/{fileCount} 个文件已上传";
+        }
+
+        public double UploadProgress
+        {
+            get => (double)fileCount / (double)uploadedCount * 100;
+        }
 
         /// <summary>
         /// Binding Commands
@@ -51,6 +60,8 @@ namespace Recorder.ViewModels
         public ICommand OpenBrowserCommand { get; set; }
 
         public ICommand ScreenshotCommand { get; set; }
+
+        public ICommand UploadCommand { get; set; }
 
         public ICommand ExitCommand { get; set; }
 
@@ -73,17 +84,18 @@ namespace Recorder.ViewModels
             SwitchRecordingCommand = ReactiveCommand.Create(SwitchRecording);
             OpenBrowserCommand = ReactiveCommand.Create(OpenBrowser);
             ScreenshotCommand = ReactiveCommand.Create(Screenshot);
+            UploadCommand = ReactiveCommand.Create(Upload);
             ExitCommand = ReactiveCommand.Create(Exit);
         }
 
-        private static void Initialize(string savePath)
+        private void Initialize(string savePath)
         {
             // 初始化资源目录
             if (!Directory.Exists(savePath))
                 Directory.CreateDirectory(savePath);
 
             // 初始化退出事件
-            //applicationLifetime.Exit += (o, e) => { Directory.Delete(savePath, true); };
+            applicationLifetime.Exit += (o, e) => { Directory.Delete(savePath); };
         }
 
         private void SwitchRecording()
@@ -91,6 +103,7 @@ namespace Recorder.ViewModels
             if (ffmpeg.IsRecording)
             {
                 ffmpeg.StopRecord();
+                fileCount++;
             }
             else
             {
@@ -99,6 +112,7 @@ namespace Recorder.ViewModels
 
             this.RaisePropertyChanged(nameof(CanUpload));
             this.RaisePropertyChanged(nameof(RecordText));
+            this.RaisePropertyChanged(nameof(UploadText));
         }
 
         private void OpenBrowser()
@@ -108,15 +122,31 @@ namespace Recorder.ViewModels
 
         private void Screenshot()
         {
-            chromium.ScreenShot();
+            if (!chromium.ScreenShot())
+                return;
+
+            fileCount++;
+            this.RaisePropertyChanged(nameof(UploadText));
         }
 
         private void Upload()
         {
+            List<Task> tasks = new();
 
+            Directory.GetFiles(savePath).ToList().ForEach(file =>
+            {
+                tasks.Add(Task.Run(async () =>
+                {
+                    if (await uploader.Upload(file))
+                        uploadedCount++;
+
+                    this.RaisePropertyChanged(nameof(UploadText));
+                    this.RaisePropertyChanged(nameof(UploadProgress));
+                }));
+            });
         }
 
-        private void Exit()
+        private async Task Exit()
         {
             if (chromium.IsRunning)
             {
@@ -128,6 +158,7 @@ namespace Recorder.ViewModels
                 ffmpeg.StopRecord();
             }
 
+            await uploader.Report(uploadedCount);
             applicationLifetime.Shutdown();
         }
     }

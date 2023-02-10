@@ -70,9 +70,13 @@ namespace Recorder.Models
             _ = page.GoToAsync("https://www.baidu.com");
         }
 
-        public void ScreenShot()
+        public bool ScreenShot()
         {
-            currentPage?.ScreenshotAsync(Path.Combine(savePath, Guid.NewGuid().ToString() + ".png"));
+            if (currentPage is null)
+                return false;
+
+            currentPage.ScreenshotAsync(Path.Combine(savePath, Guid.NewGuid().ToString() + ".png"));
+            return true;
         }
 
         public async void Close()
