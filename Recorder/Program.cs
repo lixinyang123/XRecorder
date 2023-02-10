@@ -14,7 +14,7 @@ namespace Recorder
         {
             if (args.Length == 0)
                 return;
-            
+
             BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
         }
 
