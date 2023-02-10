@@ -28,7 +28,9 @@ namespace Recorder.ViewModels
 
         private readonly string savePath;
 
-        private int uploaded = 0;
+        private int fileCount = 0;
+
+        private int uploadedCount = 0;
 
         /// <summary>
         /// Binding Properties
@@ -38,7 +40,7 @@ namespace Recorder.ViewModels
 
         public bool CanUpload => !ffmpeg.IsRecording;
 
-        public string AlertText { get; private set; } = "0个文件已上传";
+        public string AlertText { get; private set; } = "0/0 已上传";
 
         /// <summary>
         /// Binding Commands
@@ -64,7 +66,7 @@ namespace Recorder.ViewModels
             // Initialize require services
             ffmpeg = new FFmpeg(savePath);
             chromium = new Chromium(savePath);
-            uploader = new(savePath);
+            uploader = new();
             Initialize(savePath);
 
             // Bind Command
@@ -89,7 +91,6 @@ namespace Recorder.ViewModels
             if (ffmpeg.IsRecording)
             {
                 ffmpeg.StopRecord();
-                Upload();
             }
             else
             {
@@ -108,23 +109,11 @@ namespace Recorder.ViewModels
         private void Screenshot()
         {
             chromium.ScreenShot();
-            Upload();
         }
 
         private void Upload()
         {
-            // Upload files
-            List<string> files = Directory.GetFiles(savePath).ToList();
 
-            files.ForEach(async file =>
-            {
-                if(await uploader.Upload(file))
-                {
-                    AlertText = $"{++uploaded}个文件已上传";
-                }
-
-                this.RaisePropertyChanged(nameof(AlertText));
-            });
         }
 
         private void Exit()

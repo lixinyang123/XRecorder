@@ -16,6 +16,8 @@ namespace Recorder.Models
 
         public string UploadUrl { get; private set; } = string.Empty;
 
+        public string ReportUrl { get; private set; } = string.Empty;
+
         public string ApiToken { get; private set; } = string.Empty;
 
         public string TransactionCode { get; private set; } = string.Empty;
@@ -56,8 +58,9 @@ namespace Recorder.Models
                 .Split("&");
 
             UploadUrl = args[0];
-            ApiToken = args[1];
-            TransactionCode = args[2];
+            ReportUrl = args[1];
+            ApiToken = args[2];
+            TransactionCode = args[3];
         }
     }
 }

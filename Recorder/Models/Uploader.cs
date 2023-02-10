@@ -10,14 +10,16 @@ namespace Recorder.Models
     {
         private readonly AppDataContext appDataContext;
 
-        private readonly string savePath = string.Empty;
-
-        public Uploader(string savePath)
+        public Uploader()
         {
             appDataContext = App.Current?.DataContext as AppDataContext ?? throw new NullReferenceException();
-            this.savePath = savePath;
         }
 
+        /// <summary>
+        /// 生成请求表单
+        /// </summary>
+        /// <param name="fileInfo">文件信息</param>
+        /// <returns>FormContent</returns>
         private MultipartFormDataContent GenFormContent(FileInfo fileInfo)
         {
             MultipartFormDataContent httpContent = new()
@@ -51,36 +53,58 @@ namespace Recorder.Models
             return httpContent;
         }
 
+        /// <summary>
+        /// 单个文件上传
+        /// </summary>
+        /// <param name="file">文件路径</param>
+        /// <returns>是否上传成功</returns>
         public async Task<bool> Upload(string file)
         {
-            return await Task.Run(async () =>
+            FileInfo fileInfo = new(file);
+
+            // 发送请求
+            using HttpRequestMessage requestMessage = new()
             {
-                FileInfo fileInfo = new(file);
+                RequestUri = new Uri(appDataContext.UploadUrl),
+                Method = HttpMethod.Post,
+                Content = GenFormContent(fileInfo)
+            };
 
-                // 发送请求
-                using HttpRequestMessage requestMessage = new()
-                {
-                    RequestUri = new Uri(appDataContext.UploadUrl),
-                    Method = HttpMethod.Post,
-                    Content = GenFormContent(fileInfo)
-                };
+            using HttpClient httpClient = new();
+            httpClient.DefaultRequestHeaders.Add("Authorization", appDataContext.ApiToken);
 
-                using HttpClient httpClient = new();
-                httpClient.DefaultRequestHeaders.Add("Authorization", appDataContext.ApiToken);
+            using HttpResponseMessage responseMessage = await httpClient.SendAsync(requestMessage);
+            string resultStr = await responseMessage.Content.ReadAsStringAsync();
 
-                using HttpResponseMessage responseMessage = await httpClient.SendAsync(requestMessage);
-                string resultStr = await responseMessage.Content.ReadAsStringAsync();
+            // 解析上传结果
+            UploadResult result = JsonSerializer.Deserialize<UploadResult>(resultStr)
+                ?? new UploadResult() { Msg = string.Empty, Code = 404 };
 
-                // 解析上传结果
-                UploadResult result = JsonSerializer.Deserialize<UploadResult>(resultStr)
-                    ?? new UploadResult() { Msg = string.Empty, Code = 404 };
-
-                if (result.Code != 200)
-                    return false;
-
+            if (result.Code == 200)
                 File.Delete(fileInfo.FullName);
-                return true;
-            });
+
+            return result.Code == 200;
+        }
+
+        /// <summary>
+        /// 报告上传成功文件数量
+        /// </summary>
+        /// <returns>是否报告成功</returns>
+        public async Task<bool> Report(int uploaded)
+        {
+            using HttpClient httpClient = new();
+            HttpContent httpContent = new MultipartFormDataContent()
+            {
+                { new StringContent(uploaded.ToString()), "proofCount" },
+                { new StringContent(appDataContext.TransactionCode), "transactionCode" }
+            };
+
+            HttpResponseMessage responseMessage = await httpClient.PostAsync(appDataContext.ReportUrl, httpContent);
+            string resultStr = await responseMessage.Content.ReadAsStringAsync();
+            UploadResult result = JsonSerializer.Deserialize<UploadResult>(resultStr)
+                ?? new UploadResult() { Msg = string.Empty, Code = 404 };
+
+            return result.Code == 200;
         }
     }
 }

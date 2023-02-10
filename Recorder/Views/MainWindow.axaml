@@ -26,7 +26,7 @@
 			<Button Content="启动浏览器" Command="{Binding OpenBrowserCommand}" Margin="5" />
 			<Button Content="网页截图" Command="{Binding ScreenshotCommand}" Margin="5" />
 			<Button Content="{Binding RecordText}" Command="{Binding SwitchRecordingCommand}" Margin="5" />
-			<Button Content="退出" Command="{Binding ExitCommand}" Grid.Column="3" Margin="5" />
+			<Button Content="完成" Command="{Binding ExitCommand}" Grid.Column="3" Margin="5" />
 		</StackPanel>
 		
 		<TextBlock Text="{Binding AlertText}" HorizontalAlignment="Center" />
