@@ -97,7 +97,7 @@ namespace Recorder.ViewModels
                 Directory.CreateDirectory(savePath);
 
             // 初始化退出事件
-            //applicationLifetime.Exit += (o, e) => { Directory.Delete(savePath); };
+            applicationLifetime.Exit += (o, e) => { Directory.Delete(savePath); };
         }
 
         private void SwitchRecording()
