@@ -1,6 +1,7 @@
 ﻿using PuppeteerSharp;
 using System;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace Recorder.Models
 {
@@ -70,13 +71,12 @@ namespace Recorder.Models
             _ = page.GoToAsync("https://www.baidu.com");
         }
 
-        public bool ScreenShot()
+        public async Task ScreenShot()
         {
             if (currentPage is null)
-                return false;
+                return;
 
-            currentPage.ScreenshotAsync(Path.Combine(savePath, Guid.NewGuid().ToString() + ".png"));
-            return true;
+            await currentPage.ScreenshotAsync(Path.Combine(savePath, Guid.NewGuid().ToString() + ".png"));
         }
 
         public async void Close()

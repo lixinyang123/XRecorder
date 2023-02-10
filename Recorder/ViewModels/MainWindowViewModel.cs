@@ -103,7 +103,7 @@ namespace Recorder.ViewModels
             if (ffmpeg.IsRecording)
             {
                 ffmpeg.StopRecord();
-                fileCount++;
+                CheckFileCount();
             }
             else
             {
@@ -120,14 +120,14 @@ namespace Recorder.ViewModels
             chromium.LauncherPuppeteer();
         }
 
-        private void Screenshot()
+        private async void Screenshot()
         {
-            if (!chromium.ScreenShot())
-                return;
-
-            fileCount++;
+            await chromium.ScreenShot();
+            CheckFileCount();
             this.RaisePropertyChanged(nameof(UploadText));
         }
+
+        private void CheckFileCount() => fileCount = Directory.GetFiles(savePath).Length;
 
         private void Upload()
         {

@@ -3,6 +3,7 @@ using System.IO;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace Recorder.Models
 {
@@ -77,13 +78,12 @@ namespace Recorder.Models
             string resultStr = await responseMessage.Content.ReadAsStringAsync();
 
             // 解析上传结果
-            UploadResult result = JsonSerializer.Deserialize<UploadResult>(resultStr)
-                ?? new UploadResult() { Msg = string.Empty, Code = 404 };
+            UploadResult? result = JsonSerializer.Deserialize<UploadResult>(resultStr);
 
-            if (result.Code == 200)
+            if (result?.Code == 200)
                 File.Delete(fileInfo.FullName);
 
-            return result.Code == 200;
+            return result?.Code == 200;
         }
 
         /// <summary>
@@ -92,19 +92,20 @@ namespace Recorder.Models
         /// <returns>是否报告成功</returns>
         public async Task<bool> Report(int uploaded)
         {
-            using HttpClient httpClient = new();
-            HttpContent httpContent = new MultipartFormDataContent()
+            HttpContent httpContent = new StringContent(JsonSerializer.Serialize(new
             {
-                { new StringContent(uploaded.ToString()), "proofCount" },
-                { new StringContent(appDataContext.TransactionCode), "transactionCode" }
-            };
+                proofCount = uploaded,
+                transactionCode = appDataContext.TransactionCode
+            }));
 
+            HttpClient httpClient = new();
+            httpClient.DefaultRequestHeaders.Add("Authorization", appDataContext.ApiToken);
             HttpResponseMessage responseMessage = await httpClient.PostAsync(appDataContext.ReportUrl, httpContent);
-            string resultStr = await responseMessage.Content.ReadAsStringAsync();
-            UploadResult result = JsonSerializer.Deserialize<UploadResult>(resultStr)
-                ?? new UploadResult() { Msg = string.Empty, Code = 404 };
 
-            return result.Code == 200;
+            string resultStr = await responseMessage.Content.ReadAsStringAsync();
+            UploadResult? result = JsonSerializer.Deserialize<UploadResult>(resultStr);
+
+            return result?.Code == 200;
         }
     }
 }
