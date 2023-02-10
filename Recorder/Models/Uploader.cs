@@ -91,6 +91,9 @@ namespace Recorder.Models
         /// <returns>是否报告成功</returns>
         public async Task<bool> Report(int uploaded)
         {
+            if (uploaded == 0)
+                return false;
+
             HttpContent httpContent = new StringContent(JsonSerializer.Serialize(new
             {
                 proofCount = uploaded,

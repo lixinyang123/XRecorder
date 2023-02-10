@@ -27,7 +27,7 @@
 			<Button Content="网页截图" Command="{Binding ScreenshotCommand}" Margin="5" />
 			<Button Content="{Binding RecordText}" Command="{Binding SwitchRecordingCommand}" Margin="5" />
 			<Button Content="上传" IsEnabled="{Binding CanUpload}" Command="{Binding UploadCommand}" Margin="5" />
-			<Button Content="完成" Command="{Binding ExitCommand}" Grid.Column="3" Margin="5" />
+			<Button Content="退出" Command="{Binding ExitCommand}" Grid.Column="3" Margin="5" />
 		</StackPanel>
 
 		<TextBlock Text="{Binding UploadText}" HorizontalAlignment="Center" />

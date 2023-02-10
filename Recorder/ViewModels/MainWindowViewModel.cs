@@ -33,6 +33,8 @@ namespace Recorder.ViewModels
 
         private int uploadedCount = 0;
 
+        private readonly object locker = new();
+
         /// <summary>
         /// Binding Properties
         /// </summary>
@@ -95,7 +97,7 @@ namespace Recorder.ViewModels
                 Directory.CreateDirectory(savePath);
 
             // 初始化退出事件
-            applicationLifetime.Exit += (o, e) => { Directory.Delete(savePath); };
+            //applicationLifetime.Exit += (o, e) => { Directory.Delete(savePath); };
         }
 
         private void SwitchRecording()
@@ -129,7 +131,7 @@ namespace Recorder.ViewModels
 
         private void CheckFileCount() => fileCount = Directory.GetFiles(savePath).Length;
 
-        private void Upload()
+        private async void Upload()
         {
             List<Task> tasks = new();
 
@@ -138,15 +140,24 @@ namespace Recorder.ViewModels
                 tasks.Add(Task.Run(async () =>
                 {
                     if (await uploader.Upload(file))
-                        uploadedCount++;
+                    {
+                        lock(locker)
+                        {
+                            uploadedCount++;
+                        }
+                    }
 
                     this.RaisePropertyChanged(nameof(UploadText));
                     this.RaisePropertyChanged(nameof(UploadProgress));
                 }));
             });
+
+            Task.WaitAll(tasks.ToArray());
+            await uploader.Report(uploadedCount);
+            Exit();
         }
 
-        private async Task Exit()
+        private void Exit()
         {
             if (chromium.IsRunning)
             {
@@ -158,7 +169,6 @@ namespace Recorder.ViewModels
                 ffmpeg.StopRecord();
             }
 
-            await uploader.Report(uploadedCount);
             applicationLifetime.Shutdown();
         }
     }
