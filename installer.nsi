@@ -65,6 +65,9 @@ Section "Dummy Section" SecDummy
   ;Create uninstaller
   WriteUninstaller "$INSTDIR\Uninstall.exe"
 
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Recorder" "DisplayName" "Recorder"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Recorder" "UninstallString" "$INSTDIR\Uninstall.exe"
+
 SectionEnd
 
 ;--------------------------------
@@ -88,5 +91,6 @@ Section "Uninstall"
   RMDir /r "$INSTDIR"
 
   DeleteRegKey HKCR "Recorder"
+  DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Recorder"
 
 SectionEnd
