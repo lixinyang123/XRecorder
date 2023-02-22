@@ -2,7 +2,7 @@
 
 Screen capture build with ffmpeg.
 
-## Prerequisites
+### Prerequisites
 
 Windows
 
@@ -16,25 +16,25 @@ Ubuntu (20.04+)
 sudo apt-get dotnet-sdk-7
 ```
 
-## Restore dependences
+### Restore dependences
 
 ```bash
 pwsh initialize.ps1
 ```
 
-## Compile
+### Compile
 
 ```bash
 dotnet build
 ```
 
-## Debug & Run
+### Debug & Run
 
 ```bash
 dotnet run
 ```
 
-## Publish
+### Publish
 
 ```bash
 dotnet publish -r <RID> -c Release --self-contained
@@ -43,7 +43,7 @@ dotnet publish -r <RID> -c Release --self-contained
 dotnet publish -r win-x64 -c Release --self-contained
 ```
 
-## Publish & Builder installer
+### Publish & Builder installer
 
 Publish script include the publish command.
 
