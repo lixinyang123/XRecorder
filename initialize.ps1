@@ -39,3 +39,5 @@ if($IsMacOS) {
     Download -Url $Dependences.ffmpeg.bin.osx64 -OutFile $LibFolder/ffmpeg.zip
     Download -Url $Dependences.chromium.bin.osx64 -OutFile $LibFolder/chromium.zip
 }
+
+dotnet restore
