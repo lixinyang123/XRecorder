@@ -21,7 +21,7 @@ namespace Recorder.Models
 
         private static string GenCommand(string format, string input, string fileName, string color = "red", string text = "fasuo")
         {
-            return $"-framerate 30 -f {format} -i {input} -vf \"drawtext=fontsize=160:fontcolor={color}:text='{text}'\" -c:v libx264 -pix_fmt yuv420p -an -preset ultrafast -rtbufsize 3500k {fileName}";
+            return $"-y -framerate 30 -f {format} -i {input} -vf \"drawtext=fontsize=160:fontcolor={color}:text='{text}'\" -c:v libx264 -r 30 -pix_fmt yuv420p -an -preset ultrafast -rtbufsize 3500k {fileName}";
         }
 
         public void StartRecord()
@@ -44,7 +44,7 @@ namespace Recorder.Models
                 }
                 else if (OperatingSystem.IsMacOS())
                 {
-                    startInfo = new("ffmpeg", GenCommand("avfoundation", "0", fileName));
+                    startInfo = new("ffmpeg", GenCommand("avfoundation", "1:0", fileName));
                 }
                 else
                 {
