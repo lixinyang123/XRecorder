@@ -33,11 +33,17 @@ if($IsWindows) {
 if ($IsLinux) {
     Download -Url $Dependences.ffmpeg.bin.linux64 -OutFile $LibFolder/ffmpeg.zip
     Download -Url $Dependences.chromium.bin.linux64 -OutFile $LibFolder/chromium.zip
+
+    chmod +x $LibFolder/ffmpeg
+    chmod +x $LibFolder/chrome-linux/chrome
 }
 
 if($IsMacOS) {
     Download -Url $Dependences.ffmpeg.bin.osx64 -OutFile $LibFolder/ffmpeg.zip
     Download -Url $Dependences.chromium.bin.osx64 -OutFile $LibFolder/chromium.zip
+
+    chmod +x $LibFolder/ffmpeg
+    chmod +x $LibFolder/chrome-mac/Chromium.app/Contents/MacOS/Chromium
 }
 
 dotnet restore
