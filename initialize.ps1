@@ -1,7 +1,7 @@
 $LibFolder = "Recorder/lib"
 
 if (Test-Path $LibFolder) {
-    Remove-Item $LibFolder -Recurse
+    Remove-Item $LibFolder -Recurse -Force
 }
 
 if ($False -eq $(Test-Path $LibFolder)) {
