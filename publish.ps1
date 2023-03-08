@@ -28,7 +28,7 @@ $LibFolder = "Recorder/lib"
 $PublishFolder = "Recorder/bin/Release/net7.0/$Platform/publish"
 
 if (Test-Path $PublishFolder) {
-    Remove-Item $PublishFolder -Recurse
+    Remove-Item $PublishFolder -Recurse -Force
 }
 
 Copy-Item -Path $LibFolder -Destination $PublishFolder -Recurse
