@@ -38,7 +38,7 @@ dotnet publish -r $Platform -c Release --self-contained
 # ====================== Build Setup App ======================
 
 if($IsWindows) {
-    makensis installer.nsi
+    makensis Recorder.Windows/installer.nsi
 }
 
 if ($IsLinux) {
