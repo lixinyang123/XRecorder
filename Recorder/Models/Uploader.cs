@@ -22,6 +22,9 @@ namespace Recorder.Models
         /// <returns>FormContent</returns>
         private MultipartFormDataContent GenFormContent(FileInfo fileInfo)
         {
+            string obtainEvidenecStart = fileInfo.CreationTime.ToString("yyyy-MM-dd hh:mm:ss");
+            string obtainEvidenecEnd = DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss");
+
             MultipartFormDataContent httpContent = new()
             {
                 // 传输代码
@@ -35,11 +38,11 @@ namespace Recorder.Models
                 // 网页地址
                 { new StringContent(string.Empty), "proofAdress" },
                 // 取证时间
-                { new StringContent(fileInfo.CreationTime.ToString("YYYY-MM-DD hh:mm:ss")), "obtainTime" },
+                { new StringContent(obtainEvidenecStart), "obtainTime" },
                 // 开始采集时间
-                { new StringContent(fileInfo.CreationTime.ToString("YYYY-MM-DD hh:mm:ss")), "obtainEvidenecStart" },
+                { new StringContent(obtainEvidenecStart), "obtainEvidenecStart" },
                 // 结束采集时间
-                { new StringContent(DateTime.Now.ToString("YYYY-MM-DD hh:mm:ss")), "obtainEvidenecEnd" },
+                { new StringContent(obtainEvidenecEnd), "obtainEvidenecEnd" },
                 // 文件
                 { new ByteArrayContent(File.ReadAllBytes(fileInfo.FullName)), "file", fileInfo.Name }
             };
