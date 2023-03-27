@@ -43,7 +43,7 @@
 ;--------------------------------
 ;Languages
  
-  !insertmacro MUI_LANGUAGE "English"
+  !insertmacro MUI_LANGUAGE "SimpChinese"
 
 ;--------------------------------
 ;Installer Sections

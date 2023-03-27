@@ -40,9 +40,9 @@ namespace Recorder.Models
                 // 取证时间
                 { new StringContent(obtainEvidenecStart), "obtainTime" },
                 // 开始采集时间
-                { new StringContent(obtainEvidenecStart), "obtainEvidenecStart" },
+                { new StringContent(obtainEvidenecStart), "obtainEvidenceStart" },
                 // 结束采集时间
-                { new StringContent(obtainEvidenecEnd), "obtainEvidenecEnd" },
+                { new StringContent(obtainEvidenecEnd), "obtainEvidenceEnd" },
                 // 文件
                 { new ByteArrayContent(File.ReadAllBytes(fileInfo.FullName)), "file", fileInfo.Name }
             };
