@@ -22,8 +22,8 @@ namespace Recorder.Models
         /// <returns>FormContent</returns>
         private MultipartFormDataContent GenFormContent(FileInfo fileInfo)
         {
-            string obtainEvidenecStart = fileInfo.CreationTime.ToString("yyyy-MM-dd hh:mm:ss");
-            string obtainEvidenecEnd = DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss");
+            string obtainEvidenecStart = fileInfo.CreationTime.ToString("yyyy-MM-dd HH:mm:ss");
+            string obtainEvidenecEnd = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
             MultipartFormDataContent httpContent = new()
             {
@@ -42,7 +42,16 @@ namespace Recorder.Models
                 // 开始采集时间
                 { new StringContent(obtainEvidenecStart), "obtainEvidenceStart" },
                 // 结束采集时间
-                { new StringContent(obtainEvidenecEnd), "obtainEvidenceEnd" },
+              //  { new StringContent(obtainEvidenecEnd), "obtainEvidenceEnd" },
+                 
+                {
+                    new StringContent(fileInfo.Extension switch
+                    {
+                        ".png" => obtainEvidenecStart,
+                        ".mp4" => obtainEvidenecEnd
+                    }),
+                    "obtainEvidenceEnd"
+                },
                 // 文件
                 { new ByteArrayContent(File.ReadAllBytes(fileInfo.FullName)), "file", fileInfo.Name }
             };
