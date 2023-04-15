@@ -28,7 +28,7 @@ $LibFolder = "Recorder/lib"
 $PublishFolder = "Recorder/bin/Release/net7.0/$Platform/publish"
 
 if (Test-Path $PublishFolder) {
-    Remove-Item $PublishFolder -Recurse
+    Remove-Item $PublishFolder -Recurse -Force
 }
 
 Copy-Item -Path $LibFolder -Destination $PublishFolder -Recurse
@@ -38,7 +38,7 @@ dotnet publish -r $Platform -c Release --self-contained
 # ====================== Build Setup App ======================
 
 if($IsWindows) {
-    makensis installer.nsi
+    makensis Recorder.Windows/installer.nsi
 }
 
 if ($IsLinux) {

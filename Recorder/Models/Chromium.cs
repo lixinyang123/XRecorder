@@ -34,7 +34,7 @@ namespace Recorder.Models
             }
             else if (OperatingSystem.IsMacOS())
             {
-                chromiumPath = Path.Combine(appDataContext.AppPath, "chrome-osx", "chrome");
+                chromiumPath = Path.Combine(appDataContext.AppPath, "chrome-mac/Chromium.app/Contents/MacOS", "Chromium");
             }
             else
             {
