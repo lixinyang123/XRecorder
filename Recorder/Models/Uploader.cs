@@ -48,7 +48,8 @@ namespace Recorder.Models
                     new StringContent(fileInfo.Extension switch
                     {
                         ".png" => obtainEvidenecStart,
-                        ".mp4" => obtainEvidenecEnd
+                        ".mp4" => obtainEvidenecEnd, 
+                        _ => string.Empty
                     }),
                     "obtainEvidenceEnd"
                 },
