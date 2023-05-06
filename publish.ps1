@@ -12,10 +12,12 @@ if($IsWindows) {
 
 if ($IsLinux) {
     $Platform = "linux-x64"
+    Throw "UnSupport Linux Installer"
 }
 
 if($IsMacOS) {
     $Platform = "osx-x64"
+    Throw "UnSupport MacOS Installer"
 }
 
 if ("UnSupport" -eq $Platform) {
@@ -38,7 +40,7 @@ dotnet publish -r $Platform -c Release --self-contained
 # ====================== Build Setup App ======================
 
 if($IsWindows) {
-    makensis Recorder.Windows/installer.nsi
+    makensis installer.nsi
 }
 
 if ($IsLinux) {
