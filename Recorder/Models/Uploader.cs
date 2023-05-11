@@ -22,37 +22,18 @@ namespace Recorder.Models
         /// <returns>FormContent</returns>
         private MultipartFormDataContent GenFormContent(FileInfo fileInfo)
         {
-            string obtainEvidenecStart = fileInfo.CreationTime.ToString("yyyy-MM-dd HH:mm:ss");
-            string obtainEvidenecEnd = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            string obtainTime = fileInfo.CreationTime.ToString("yyyy-MM-dd HH:mm:ss");
 
             MultipartFormDataContent httpContent = new()
             {
                 // 传输代码
                 { new StringContent(appDataContext.TransactionCode), "transactionCode"},
-                // 文件格式
-                {
-                    new StringContent("1"), "proofType"
-                },
                 // 文件名
                 { new StringContent(fileInfo.Name), "proofName" },
                 // 网页地址
                 { new StringContent(string.Empty), "proofAdress" },
                 // 取证时间
-                { new StringContent(obtainEvidenecStart), "obtainTime" },
-                // 开始采集时间
-                { new StringContent(obtainEvidenecStart), "obtainEvidenceStart" },
-                // 结束采集时间
-              //  { new StringContent(obtainEvidenecEnd), "obtainEvidenceEnd" },
-                 
-                {
-                    new StringContent(fileInfo.Extension switch
-                    {
-                        ".png" => obtainEvidenecStart,
-                        ".mp4" => obtainEvidenecEnd, 
-                        _ => string.Empty
-                    }),
-                    "obtainEvidenceEnd"
-                },
+                { new StringContent(obtainTime), "obtainTime" },
                 // 文件
                 { new ByteArrayContent(File.ReadAllBytes(fileInfo.FullName)), "file", fileInfo.Name }
             };
