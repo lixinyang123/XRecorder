@@ -53,7 +53,7 @@ Section "Dummy Section" SecDummy
   SetOutPath "$INSTDIR"
   
   ;ADD YOUR OWN FILES HERE...
-  File /nonfatal /r "..\Recorder\bin\Release\net7.0\win-x64\publish\*.*"
+  File /nonfatal /r "Recorder\bin\Release\net7.0\win-x64\publish\*.*"
   
   ;Store installation folder
   SetRegView 64
